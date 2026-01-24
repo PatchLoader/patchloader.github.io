@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patch Loader | Скачать</title>
     
+    <!-- Подключение Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключение Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Шрифт Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -20,6 +23,7 @@
                         bg: '#050507',
                         glass: 'rgba(255, 255, 255, 0.03)',
                         glassBorder: 'rgba(255, 255, 255, 0.08)',
+                        glassBorderActive: 'rgba(37, 99, 235, 0.3)',
                         brand: '#2563eb',
                         brandHover: '#1d4ed8',
                     }
@@ -34,8 +38,10 @@
             color: #ffffff;
             margin: 0;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Фон Canvas */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -46,6 +52,7 @@
             pointer-events: none;
         }
 
+        /* Виньетка для глубины */
         .vignette {
             background: radial-gradient(circle at center, rgba(5,5,7,0) 0%, #050507 120%);
             position: absolute;
@@ -54,6 +61,7 @@
             pointer-events: none;
         }
 
+        /* Обертка контента */
         .content-wrapper {
             position: relative;
             z-index: 10;
@@ -64,24 +72,28 @@
             padding: 20px;
         }
 
+        /* Glassmorphism Card */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glassBorder);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
+        /* Эффект наведения на активную карточку */
+        .glass-card:not(.disabled):hover {
+            border-color: var(--glassBorderActive);
             box-shadow: 0 8px 40px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
         }
 
+        /* Анимация раскрытия списка */
         .versions-wrapper {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.4s ease-out;
+            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
         }
 
@@ -94,6 +106,7 @@
             overflow: hidden;
         }
 
+        /* Поворот стрелки */
         .arrow-icon {
             transition: transform 0.3s ease;
         }
@@ -101,6 +114,7 @@
             transform: rotate(180deg);
         }
 
+        /* Анимация появления элементов */
         .fade-up {
             animation: fadeUp 0.8s ease-out forwards;
             opacity: 0;
@@ -108,6 +122,7 @@
         }
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
 
         @keyframes fadeUp {
             to {
@@ -115,16 +130,28 @@
                 transform: translateY(0);
             }
         }
+
+        /* Пульсация для бейджа Latest */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        .badge-latest {
+            animation: pulse-glow 2s infinite;
+        }
     </style>
 </head>
 <body>
 
+    <!-- 3D Фон -->
     <canvas id="bg-canvas"></canvas>
     <div class="vignette"></div>
 
     <main class="content-wrapper">
         <div class="max-w-xl w-full text-center">
             
+            <!-- Хедер страницы -->
             <div class="fade-up mb-4 inline-block">
                 <span class="px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-mono tracking-wider uppercase">
                     Tauri Powered
@@ -135,14 +162,17 @@
                 Patch Loader
             </h1>
 
-            <p class="fade-up delay-100 text-gray-400 mb-10 max-w-md mx-auto">
+            <p class="fade-up delay-100 text-gray-400 mb-10 max-w-md mx-auto leading-relaxed">
                 Легкая библиотека модификаций без лишних зависимостей. 
                 Быстро, безопасно, написано на Rust + JS.
             </p>
 
+            <!-- Секция загрузки -->
             <div class="fade-up delay-200 flex flex-col items-center">
+                
+                <!-- Основная кнопка тоггла -->
                 <button id="toggleBtn" onclick="toggleVersions()" 
-                        class="group bg-white/10 hover:bg-white/20 border border-white/10 text-white font-medium px-8 py-4 rounded-xl transition-all flex items-center gap-3 w-full md:w-auto justify-center">
+                        class="group bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium px-8 py-4 rounded-xl transition-all flex items-center gap-3 w-full md:w-auto justify-center shadow-lg shadow-black/20">
                     
                     <span>Скачать для Windows</span>
                     
@@ -151,31 +181,41 @@
                     </svg>
                 </button>
 
+                <!-- Выпадающий список версий -->
                 <div class="versions-wrapper mt-4 w-full" id="versionsWrapper">
-                    <div class="versions-inner">
+                    <div class="versions-inner flex flex-col gap-4 p-1">
                         
-                        <div class="glass-card rounded-xl p-5 text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <!-- АКТИВНАЯ ВЕРСИЯ: v.0.1.1 -->
+                        <div class="glass-card rounded-xl p-5 text-left flex flex-col sm:flex-row items-center justify-between gap-4 border-blue-500/20">
                             
                             <div class="flex-1 w-full">
                                 <div class="flex items-center gap-3 mb-1">
-                                    <h3 class="text-lg font-bold text-white">Patch Loader v.0.1.0</h3>
+                                    <h3 class="text-lg font-bold text-white">Patch Loader v.0.1.1</h3>
+                                    
+                                    <!-- Бейдж Latest -->
+                                    <span class="badge-latest px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white border border-blue-400 shadow-lg shadow-blue-500/30">
+                                        Latest
+                                    </span>
+                                    
+                                    <!-- Бейдж Stable -->
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                         Stable
                                     </span>
                                 </div>
-                                <div class="flex items-center gap-3 text-sm text-gray-500">
+                                <div class="flex items-center gap-3 text-sm text-gray-400">
                                     <span class="flex items-center gap-1">
-                                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.605L24 0v11.4H10.949V1.844zm-10.949 10.406L9.75 12.01v9.284L0 19.99v-7.74zm10.949.196L24 12.01v11.23l-13.051-1.787V12.446z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.605L24 0v11.4H10.949V1.844zm-10.949 10.406L9.75 12.01v9.284L0 19.99v-7.74zm10.949.196L24 12.01v11.23l-13.051-1.787V12.446z"/></svg>
                                         Windows 10/11
                                     </span>
                                     <span class="w-1 h-1 bg-gray-700 rounded-full"></span>
-                                    <span>5.1 MB</span>
+                                    <span>5.2 MB</span>
                                 </div>
                             </div>
 
                             <div class="flex-shrink-0 w-full sm:w-auto">
-                                <a href="https://github.com/AlexanderBichpochmak/fileff/releases/download/v.0.1.0/Installer.exe"
-                                   class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-900/20 active:scale-95 w-full sm:w-auto">
+                                <!-- Кнопка скачивания активной версии -->
+                                <a href="https://github.com/AlexanderBichpochmak/fileff/releases/download/v.0.1.1/Installer.exe"
+                                   class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-900/40 hover:shadow-blue-900/60 active:scale-95 w-full sm:w-auto">
                                     
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -186,11 +226,48 @@
 
                         </div>
 
+                        <!-- НЕАКТИВНАЯ ВЕРСИЯ: v.0.1.0 -->
+                        <div class="glass-card disabled rounded-xl p-5 text-left flex flex-col sm:flex-row items-center justify-between gap-4 opacity-50 grayscale-[0.5]">
+                            
+                            <div class="flex-1 w-full">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <h3 class="text-lg font-bold text-gray-400">Patch Loader v.0.1.0</h3>
+                                    
+                                    <!-- Бейдж Not Active -->
+                                    <span class="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-700/50 text-gray-400 border border-gray-700">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                        Not active
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.605L24 0v11.4H10.949V1.844zm-10.949 10.406L9.75 12.01v9.284L0 19.99v-7.74zm10.949.196L24 12.01v11.23l-13.051-1.787V12.446z"/></svg>
+                                        Windows 10/11
+                                    </span>
+                                    <span class="w-1 h-1 bg-gray-800 rounded-full"></span>
+                                    <span>5.1 MB</span>
+                                </div>
+                            </div>
+
+                            <div class="flex-shrink-0 w-full sm:w-auto">
+                                <!-- Заблокированная кнопка -->
+                                <button disabled 
+                                   class="flex items-center justify-center gap-2 bg-gray-700/30 text-gray-500 font-medium px-6 py-2.5 rounded-lg border border-gray-700/50 cursor-not-allowed w-full sm:w-auto">
+                                    
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                    Недоступно
+                                </button>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
 
-            <p class="mt-6 text-xs text-gray-600">
+            <p class="fade-up delay-300 mt-6 text-xs text-gray-600">
                 Установщик Tauri • Не требует .NET Framework
             </p>
 
@@ -198,14 +275,24 @@
     </main>
 
     <script>
+        // Логика переключения версий
         function toggleVersions() {
             const wrapper = document.getElementById('versionsWrapper');
             const arrow = document.getElementById('btnArrow');
+            const btn = document.getElementById('toggleBtn');
             
             wrapper.classList.toggle('open');
             arrow.classList.toggle('rotate');
+            
+            // Меняем текст кнопки в зависимости от состояния
+            if (wrapper.classList.contains('open')) {
+                btn.querySelector('span').textContent = "Свернуть список";
+            } else {
+                btn.querySelector('span').textContent = "Скачать для Windows";
+            }
         }
 
+        // Инициализация 3D фона на Three.js
         function initBackground() {
             const canvas = document.getElementById('bg-canvas');
             const scene = new THREE.Scene();
@@ -218,6 +305,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
 
+            // Основная сфера (Icosahedron)
             const geometry = new THREE.IcosahedronGeometry(12, 1);
 
             const material = new THREE.MeshBasicMaterial({ 
@@ -230,6 +318,7 @@
             const sphere = new THREE.Mesh(geometry, material);
             scene.add(sphere);
 
+            // Ядро сферы
             const coreGeo = new THREE.IcosahedronGeometry(8, 0);
             const coreMat = new THREE.MeshBasicMaterial({
                 color: 0xffffff,
@@ -239,6 +328,7 @@
             const core = new THREE.Mesh(coreGeo, coreMat);
             scene.add(core);
 
+            // Частицы
             const particlesGeo = new THREE.BufferGeometry();
             const particleCount = 500;
             const posArray = new Float32Array(particleCount * 3);
@@ -258,6 +348,7 @@
             const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
             scene.add(particlesMesh);
 
+            // Интерактивность мыши
             let mouseX = 0;
             let mouseY = 0;
             let targetX = 0;
@@ -281,12 +372,15 @@
                 targetX = mouseX * 0.0005;
                 targetY = mouseY * 0.0005;
 
+                // Плавное вращение
                 sphere.rotation.y += 0.001; 
                 sphere.rotation.x += 0.0005;
 
+                // Реакция на мышь
                 sphere.rotation.y += 0.05 * (targetX - sphere.rotation.y);
                 sphere.rotation.x += 0.05 * (targetY - sphere.rotation.x);
 
+                // "Дыхание" сферы
                 const scale = 1 + Math.sin(elapsedTime * 0.7) * 0.02;
                 sphere.scale.set(scale, scale, scale);
 
@@ -298,6 +392,7 @@
 
             animate();
 
+            // Ресайз
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
