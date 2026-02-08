@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patch Loader | Скачать</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -125,72 +125,22 @@
             }
         }
 
-        .magnetic-btn {
-            position: relative;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .magnetic-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .magnetic-btn:active {
-            transform: scale(0.98);
-        }
-
-        .versions-container {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .versions-container.open {
-            grid-template-rows: 1fr;
-        }
-
-        .versions-inner {
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .versions-container.open .versions-inner {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .version-card-active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.02) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.2);
+        .download-btn {
             position: relative;
             overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .version-card-active::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-            pointer-events: none;
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.4);
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .download-btn:active {
+            transform: scale(0.98) translateY(0);
         }
 
-        .badge {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .badge::after {
+        .download-btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -198,33 +148,38 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: shine 3s infinite;
+            transition: left 0.5s;
         }
 
-        @keyframes shine {
-            0% { left: -100%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
+        .download-btn:hover::before {
+            left: 100%;
         }
 
-        .version-card-old {
-            opacity: 0.6;
-            transition: all 0.3s ease;
-            filter: grayscale(0.3);
+        .virustotal-btn {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .version-card-old:hover {
-            opacity: 0.9;
-            filter: grayscale(0);
-            background: rgba(255, 255, 255, 0.03);
+        .virustotal-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.5);
         }
 
-        .arrow-icon {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .virustotal-btn:active {
+            transform: scale(0.98);
         }
 
-        .arrow-icon.rotate {
-            transform: rotate(180deg);
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse-glow 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -258,136 +213,47 @@
 
             <div class="fade-up delay-300 space-y-4">
                 
-                <button id="toggleBtn" onclick="toggleVersions()" 
-                        class="magnetic-btn group w-full glass-panel rounded-2xl p-6 flex items-center justify-between hover:bg-white/[0.05]">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                            </svg>
-                        </div>
-                        <div class="text-left">
-                            <div class="text-white font-semibold text-lg">Скачать для Windows</div>
-                            <div class="text-gray-500 text-sm">Версия 0.1.3 • 6.36 MB</div>
-                        </div>
-                    </div>
-                    
-                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                        <svg id="btnArrow" class="arrow-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                <!-- Кнопка скачивания -->
+                <a href="https://github.com/AlexanderBichpochmak/fileff/releases/download/pl/Installer.msi"
+                   class="download-btn pulse-animation group w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-2xl p-6 flex items-center justify-center gap-4 shadow-lg shadow-blue-900/50">
+                    <div class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                         </svg>
                     </div>
-                </button>
-
-                <div class="versions-container" id="versionsWrapper">
-                    <div class="versions-inner space-y-3 pt-2">
-                        
-                        <!-- Новая версия 0.1.3 -->
-                        <div class="version-card-active rounded-2xl p-6 relative group">
-                            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-2">
-                                        <h3 class="text-xl font-bold text-white">Patch Loader v.0.1.3</h3>
-                                        <span class="badge px-2.5 py-1 rounded-md bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-blue-500/25 border border-blue-400/30">
-                                            Latest
-                                        </span>
-                                        <span class="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">
-                                            Stable
-                                        </span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
-                                        <span class="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-md">
-                                            <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.605L24 0v11.4H10.949V1.844zm-10.949 10.406L9.75 12.01v9.284L0 19.99v-7.74zm10.949.196L24 12.01v11.23l-13.051-1.787V12.446z"/>
-                                            </svg>
-                                            Windows 10/11
-                                        </span>
-                                        <span class="text-gray-600">•</span>
-                                        <span>6.36 MB</span>
-                                    </div>
-                                </div>
-
-                                <a href="https://github.com/AlexanderBichpochmak/fileff/releases/download/1_1_3/Installer.exe"
-                                   class="flex-shrink-0 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-900/50 hover:shadow-blue-900/70 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 group/btn">
-                                    <svg class="w-5 h-5 group-hover/btn:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                    </svg>
-                                    Скачать
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-4 py-2">
-                            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
-                            <span class="text-xs text-gray-600 uppercase tracking-widest font-medium">Предыдущие версии</span>
-                            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
-                        </div>
-
-                        <div class="grid gap-2">
-                            <!-- Версия 0.1.2 - теперь устаревшая -->
-                            <div class="version-card-old glass-panel rounded-xl p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 font-medium text-sm">v.0.1.2</div>
-                                        <div class="text-gray-600 text-xs">5.3 MB • Устарело</div>
-                                    </div>
-                                </div>
-                                <button disabled class="text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg border border-gray-800 cursor-not-allowed">
-                                    Недоступно
-                                </button>
-                            </div>
-
-                            <div class="version-card-old glass-panel rounded-xl p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 font-medium text-sm">v.0.1.1</div>
-                                        <div class="text-gray-600 text-xs">5.2 MB • Устарело</div>
-                                    </div>
-                                </div>
-                                <button disabled class="text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg border border-gray-800 cursor-not-allowed">
-                                    Недоступно
-                                </button>
-                            </div>
-
-                            <div class="version-card-old glass-panel rounded-xl p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 font-medium text-sm">v.0.1.0</div>
-                                        <div class="text-gray-600 text-xs">5.1 MB • Устарело</div>
-                                    </div>
-                                </div>
-                                <button disabled class="text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg border border-gray-800 cursor-not-allowed">
-                                    Недоступно
-                                </button>
-                            </div>
-                        </div>
-
+                    <div class="text-left">
+                        <div class="text-white font-bold text-xl">Скачать Patch Loader</div>
+                        <div class="text-blue-100/70 text-sm">Windows 10/11 • MSI Installer</div>
                     </div>
-                </div>
+                </a>
 
+                <!-- Кнопка VirusTotal -->
+                <a href="https://www.virustotal.com/gui/file/dafbcac5bbb8c6199bdd655c41896c90fd89f33d18fbc9969bf9658c966b70b2?nocache=1"
+                   target="_blank"
+                   class="virustotal-btn glass-panel w-full rounded-2xl p-5 flex items-center justify-center gap-3 border border-emerald-500/20">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-emerald-400 font-semibold">Проверить на VirusTotal</span>
+                        <span class="text-gray-500 text-sm ml-2">• 0 угроз</span>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </a>
+
+                <!-- Статистика -->
                 <div class="fade-up delay-400 mt-8 grid grid-cols-3 gap-4 text-center">
                     <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
-                        <div class="text-2xl font-bold text-white mb-1">0.1.3</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">Версия</div>
+                        <div class="text-2xl font-bold text-white mb-1">Rust</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Язык</div>
                     </div>
                     <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
-                        <div class="text-2xl font-bold text-white mb-1">6.36</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">Мегабайт</div>
+                        <div class="text-2xl font-bold text-white mb-1">MSI</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Формат</div>
                     </div>
                     <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
                         <div class="text-2xl font-bold text-emerald-400 mb-1">100%</div>
@@ -405,24 +271,6 @@
     </main>
 
     <script>
-        function toggleVersions() {
-            const wrapper = document.getElementById('versionsWrapper');
-            const arrow = document.getElementById('btnArrow');
-            const btn = document.getElementById('toggleBtn');
-            const isOpen = wrapper.classList.contains('open');
-            
-            wrapper.classList.toggle('open');
-            arrow.classList.toggle('rotate');
-            
-            if (!isOpen) {
-                btn.classList.add('bg-white/[0.08]', 'border-blue-500/30');
-                btn.classList.remove('glass-panel');
-            } else {
-                btn.classList.remove('bg-white/[0.08]', 'border-blue-500/30');
-                btn.classList.add('glass-panel');
-            }
-        }
-
         function initBackground() {
             const canvas = document.getElementById('bg-canvas');
             const scene = new THREE.Scene();
@@ -545,18 +393,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', initBackground);
-
-        document.addEventListener('mousemove', (e) => {
-            const cards = document.querySelectorAll('.glass-panel, .version-card-active');
-            const x = (window.innerWidth - e.pageX * 2) / 100;
-            const y = (window.innerHeight - e.pageY * 2) / 100;
-            
-            cards.forEach(card => {
-                if(card.matches(':hover')) {
-                    card.style.transform = `translateX(${x}px) translateY(${y}px)`;
-                }
-            });
-        });
     </script>
+
 </body>
 </html>
