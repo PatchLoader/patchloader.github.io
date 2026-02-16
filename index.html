@@ -7,7 +7,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -21,10 +21,12 @@
                         surface: '#0a0a0f',
                         primary: '#3b82f6',
                         primaryGlow: 'rgba(59, 130, 246, 0.5)',
+                        telegram: '#0088cc',
                     },
                     boxShadow: {
                         'glow': '0 0 40px -10px rgba(59, 130, 246, 0.3)',
                         'glow-lg': '0 0 60px -15px rgba(59, 130, 246, 0.4)',
+                        'telegram-glow': '0 0 40px -10px rgba(0, 136, 204, 0.3)',
                     }
                 }
             }
@@ -117,6 +119,7 @@
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
         .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
 
         @keyframes fadeUp {
             to {
@@ -155,6 +158,36 @@
             left: 100%;
         }
 
+        .telegram-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px rgba(0, 136, 204, 0.4);
+        }
+
+        .telegram-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+
+        .telegram-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .telegram-btn:hover::before {
+            left: 100%;
+        }
+
         .virustotal-btn {
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -181,6 +214,41 @@
         .pulse-animation {
             animation: pulse-glow 2s ease-in-out infinite;
         }
+
+        /* Floating animation for header badge */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Hover effects for stat cards */
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::after {
+            left: 100%;
+        }
     </style>
 </head>
 <body>
@@ -193,7 +261,7 @@
         <div class="max-w-2xl w-full">
             
             <div class="text-center mb-12">
-                <div class="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 mb-6 hover:border-blue-500/30 transition-colors cursor-default">
+                <div class="fade-up float-animation inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 mb-6 hover:border-blue-500/30 transition-colors cursor-default">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
@@ -223,8 +291,26 @@
                     </div>
                     <div class="text-left">
                         <div class="text-white font-bold text-xl">Скачать Patch Loader</div>
-                        <div class="text-blue-100/70 text-sm">Windows 10/11 • MSI Installer</div>
+                        <div class="text-blue-100/70 text-sm">Windows 10/11 • MSI Installer • v0.1.7</div>
                     </div>
+                </a>
+
+                <!-- Кнопка Telegram -->
+                <a href="https://t.me/codeverse_official"
+                   target="_blank"
+                   class="telegram-btn group w-full bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 rounded-2xl p-5 flex items-center justify-center gap-3 shadow-lg shadow-sky-900/50">
+                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.093.036.306.02.472z"/>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-white font-bold text-lg">Присоединиться к Telegram</div>
+                        <div class="text-sky-100/70 text-sm">Новости, обновления и поддержка</div>
+                    </div>
+                    <svg class="w-5 h-5 text-white/60 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
                 </a>
 
                 <!-- Кнопка VirusTotal -->
@@ -247,23 +333,29 @@
 
                 <!-- Статистика -->
                 <div class="fade-up delay-400 mt-8 grid grid-cols-3 gap-4 text-center">
-                    <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
+                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
                         <div class="text-2xl font-bold text-white mb-1">Rust</div>
                         <div class="text-xs text-gray-500 uppercase tracking-wider">Язык</div>
                     </div>
-                    <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
+                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
                         <div class="text-2xl font-bold text-white mb-1">MSI</div>
                         <div class="text-xs text-gray-500 uppercase tracking-wider">Формат</div>
                     </div>
-                    <div class="glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-colors">
+                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
                         <div class="text-2xl font-bold text-emerald-400 mb-1">100%</div>
                         <div class="text-xs text-gray-500 uppercase tracking-wider">Безопасность</div>
                     </div>
                 </div>
 
-                <p class="text-center text-xs text-gray-600 mt-6">
-                    Установщик Tauri • Не требует .NET Framework
-                </p>
+                <!-- Футер -->
+                <div class="fade-up delay-500 mt-8 text-center space-y-2">
+                    <p class="text-xs text-gray-600">
+                        Установщик Tauri • Не требует .NET Framework
+                    </p>
+                    <p class="text-xs text-gray-700">
+                        Made with ❤️ by CodeVerse
+                    </p>
+                </div>
 
             </div>
 
