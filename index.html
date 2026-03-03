@@ -1,491 +1,55 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patch Loader | Скачать</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        bg: '#030305',
-                        surface: '#0a0a0f',
-                        primary: '#3b82f6',
-                        primaryGlow: 'rgba(59, 130, 246, 0.5)',
-                        telegram: '#0088cc',
-                    },
-                    boxShadow: {
-                        'glow': '0 0 40px -10px rgba(59, 130, 246, 0.3)',
-                        'glow-lg': '0 0 60px -15px rgba(59, 130, 246, 0.4)',
-                        'telegram-glow': '0 0 40px -10px rgba(0, 136, 204, 0.3)',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --glass-border-hover: rgba(59, 130, 246, 0.3);
-        }
-
-        body {
-            background-color: #030305;
-            color: #ffffff;
-            margin: 0;
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .vignette {
-            background: radial-gradient(circle at 50% 50%, rgba(3,3,5,0) 0%, rgba(3,3,5,0.4) 50%, rgba(3,3,5,0.9) 100%);
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-panel:hover {
-            border-color: var(--glass-border-hover);
-            box-shadow: 0 8px 32px 0 rgba(59, 130, 246, 0.15);
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .fade-up {
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .download-btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.4);
-        }
-
-        .download-btn:active {
-            transform: scale(0.98) translateY(0);
-        }
-
-        .download-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .download-btn:hover::before {
-            left: 100%;
-        }
-
-        .telegram-btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .telegram-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px -10px rgba(0, 136, 204, 0.4);
-        }
-
-        .telegram-btn:active {
-            transform: scale(0.98) translateY(0);
-        }
-
-        .telegram-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .telegram-btn:hover::before {
-            left: 100%;
-        }
-
-        .virustotal-btn {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .virustotal-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(34, 197, 94, 0.15);
-            border-color: rgba(34, 197, 94, 0.5);
-        }
-
-        .virustotal-btn:active {
-            transform: scale(0.98);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
-            }
-        }
-
-        .pulse-animation {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        /* Floating animation for header badge */
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Hover effects for stat cards */
-        .stat-card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .stat-card:hover::after {
-            left: 100%;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patch Loader</title>
+<style>
+body { margin: 0; padding: 0; overflow: hidden; background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
+canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+.container { position: relative; z-index: 2; text-align: center; background: rgba(15, 15, 20, 0.85); padding: 40px; border-radius: 16px; box-shadow: 0 0 30px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+h1 { font-size: 26px; margin: 0 0 10px 0; font-weight: 600; }
+p { font-size: 18px; margin: 0 0 30px 0; color: #b0b0b0; }
+a.btn { display: inline-block; padding: 14px 35px; background: #ffffff; color: #000000; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 16px; transition: all 0.3s ease; }
+a.btn:hover { background: #e0e0e0; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); transform: translateY(-3px); }
+</style>
 </head>
 <body>
-
-    <div class="noise-overlay"></div>
-    <canvas id="bg-canvas"></canvas>
-    <div class="vignette"></div>
-
-    <main class="content-wrapper">
-        <div class="max-w-2xl w-full">
-            
-            <div class="text-center mb-12">
-                <div class="fade-up float-animation inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 mb-6 hover:border-blue-500/30 transition-colors cursor-default">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                    </span>
-                    <span class="text-blue-400 text-xs font-semibold tracking-widest uppercase">Tauri Powered</span>
-                </div>
-
-                <h1 class="fade-up delay-100 text-6xl md:text-7xl font-bold tracking-tight mb-4 text-gradient">
-                    Patch Loader
-                </h1>
-
-                <p class="fade-up delay-200 text-lg text-gray-400 max-w-lg mx-auto leading-relaxed font-light">
-                    Легкая библиотека модификаций без лишних зависимостей. 
-                    <span class="text-gray-300">Быстро, безопасно, написано на Rust.</span>
-                </p>
-            </div>
-
-            <div class="fade-up delay-300 space-y-4">
-                
-                <!-- Кнопка скачивания -->
-                <a href="https://github.com/PatchLoader/patchloader.github.io/releases/download/v0.2.2/Installer.msi"
-                   class="download-btn pulse-animation group w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-2xl p-6 flex items-center justify-center gap-4 shadow-lg shadow-blue-900/50">
-                    <div class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                    </div>
-                    <div class="text-left">
-                        <div class="text-white font-bold text-xl">Скачать Patch Loader</div>
-                        <div class="text-blue-100/70 text-sm">Windows 10/11 • MSI Installer • v0.2.2</div>
-                    </div>
-                </a>
-
-                <!-- Кнопка Telegram -->
-                <a href="https://t.me/codeverse_official"
-                   target="_blank"
-                   class="telegram-btn group w-full bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 rounded-2xl p-5 flex items-center justify-center gap-3 shadow-lg shadow-sky-900/50">
-                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.093.036.306.02.472z"/>
-                        </svg>
-                    </div>
-                    <div class="text-left">
-                        <div class="text-white font-bold text-lg">Присоединиться к Telegram</div>
-                        <div class="text-sky-100/70 text-sm">Новости, обновления и поддержка</div>
-                    </div>
-                    <svg class="w-5 h-5 text-white/60 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                    </svg>
-                </a>
-
-                <!-- Кнопка VirusTotal -->
-                <a href="https://www.virustotal.com/gui/file/d896d52eb4ab0367aeb8bb70f0495338d0b0d26c6748c113d9ca1516c1284806"
-                   target="_blank"
-                   class="virustotal-btn glass-panel w-full rounded-2xl p-5 flex items-center justify-center gap-3 border border-emerald-500/20">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="text-emerald-400 font-semibold">Проверить на VirusTotal</span>
-                        <span class="text-gray-500 text-sm ml-2">• 0 угроз</span>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                </a>
-
-                <!-- Статистика -->
-                <div class="fade-up delay-400 mt-8 grid grid-cols-3 gap-4 text-center">
-                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
-                        <div class="text-2xl font-bold text-white mb-1">Rust</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">Язык</div>
-                    </div>
-                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
-                        <div class="text-2xl font-bold text-white mb-1">MSI</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">Формат</div>
-                    </div>
-                    <div class="stat-card glass-panel rounded-xl p-4 hover:bg-white/[0.05] transition-all cursor-default">
-                        <div class="text-2xl font-bold text-emerald-400 mb-1">100%</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">Безопасность</div>
-                    </div>
-                </div>
-
-                <!-- Футер -->
-                <div class="fade-up delay-500 mt-8 text-center space-y-2">
-                    <p class="text-xs text-gray-600">
-                        Установщик Tauri • Не требует .NET Framework
-                    </p>
-                    <p class="text-xs text-gray-700">
-                        Made with ❤️ by CodeVerse
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-    </main>
-
-    <script>
-        function initBackground() {
-            const canvas = document.getElementById('bg-canvas');
-            const scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x030305, 0.02);
-
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 30;
-
-            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            const geometry = new THREE.IcosahedronGeometry(10, 2);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0x3b82f6,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.08 
-            });
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-
-            const coreGeometry = new THREE.IcosahedronGeometry(6, 1);
-            const coreMaterial = new THREE.MeshBasicMaterial({
-                color: 0x60a5fa,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.04
-            });
-            const core = new THREE.Mesh(coreGeometry, coreMaterial);
-            scene.add(core);
-
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particleCount = 300;
-            const posArray = new Float32Array(particleCount * 3);
-            const velocities = [];
-
-            for(let i = 0; i < particleCount * 3; i += 3) {
-                posArray[i] = (Math.random() - 0.5) * 60;
-                posArray[i+1] = (Math.random() - 0.5) * 60;
-                posArray[i+2] = (Math.random() - 0.5) * 60;
-                
-                velocities.push({
-                    x: (Math.random() - 0.5) * 0.02,
-                    y: (Math.random() - 0.5) * 0.02,
-                    z: (Math.random() - 0.5) * 0.02
-                });
-            }
-
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.15,
-                color: 0x3b82f6,
-                transparent: true,
-                opacity: 0.6,
-                sizeAttenuation: true
-            });
-
-            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-
-            let mouseX = 0;
-            let mouseY = 0;
-            let targetX = 0;
-            let targetY = 0;
-
-            document.addEventListener('mousemove', (event) => {
-                mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
-                mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
-            });
-
-            const clock = new THREE.Clock();
-
-            function animate() {
-                requestAnimationFrame(animate);
-                const elapsedTime = clock.getElapsedTime();
-
-                targetX = mouseX * 0.5;
-                targetY = mouseY * 0.5;
-
-                sphere.rotation.y += 0.001;
-                sphere.rotation.x += 0.0005;
-                
-                core.rotation.y -= 0.002;
-                core.rotation.z += 0.001;
-
-                sphere.rotation.y += 0.05 * (targetX - sphere.rotation.y);
-                sphere.rotation.x += 0.05 * (targetY - sphere.rotation.x);
-
-                const scale = 1 + Math.sin(elapsedTime * 0.5) * 0.05;
-                sphere.scale.set(scale, scale, scale);
-                core.scale.set(scale * 0.8, scale * 0.8, scale * 0.8);
-
-                const positions = particlesGeometry.attributes.position.array;
-                for(let i = 0; i < particleCount; i++) {
-                    const i3 = i * 3;
-                    positions[i3] += velocities[i].x;
-                    positions[i3+1] += velocities[i].y;
-                    positions[i3+2] += velocities[i].z;
-
-                    if(Math.abs(positions[i3]) > 30) velocities[i].x *= -1;
-                    if(Math.abs(positions[i3+1]) > 30) velocities[i].y *= -1;
-                    if(Math.abs(positions[i3+2]) > 30) velocities[i].z *= -1;
-                }
-                particlesGeometry.attributes.position.needsUpdate = true;
-                
-                particlesMesh.rotation.y = elapsedTime * 0.05;
-
-                renderer.render(scene, camera);
-            }
-
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', initBackground);
-    </script>
-
+<canvas id="stars"></canvas>
+<div class="container">
+<h1>Patch Loader закрыт.</h1>
+<p>Больше он не будет распространяться.</p>
+<a href="https://t.me/codeverse_official" class="btn" target="_blank">Подробнее</a>
+</div>
+<script>
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+const stars = [];
+for (let i = 0; i < 350; i++) {
+stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5, s: Math.random() * 0.5 + 0.1 });
+}
+function animate() {
+ctx.clearRect(0, 0, w, h);
+ctx.fillStyle = '#ffffff';
+stars.forEach(star => {
+ctx.beginPath();
+ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+ctx.fill();
+star.y -= star.s;
+if (star.y < 0) {
+star.y = h;
+star.x = Math.random() * w;
+}
+});
+requestAnimationFrame(animate);
+}
+animate();
+window.addEventListener('resize', () => {
+w = canvas.width = window.innerWidth;
+h = canvas.height = window.innerHeight;
+});
+</script>
 </body>
 </html>
