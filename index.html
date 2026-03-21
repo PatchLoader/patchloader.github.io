@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ГородУслуги</title>
+    <title>ГородУслуги - Государственные услуги</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         :root {
@@ -21,12 +21,12 @@
             --warning: #f59e0b;
             --dark: #1e293b;
             --gray: #64748b;
-            --light-gray: #f1f5f9;
+            --light: #f1f5f9;
             --white: #ffffff;
         }
 
         body {
-            background: var(--light-gray);
+            background: var(--light);
             min-height: 100vh;
         }
 
@@ -34,18 +34,19 @@
         .header {
             background: var(--white);
             padding: 16px 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .header-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .logo {
@@ -57,9 +58,7 @@
             color: var(--dark);
         }
 
-        .logo i {
-            color: var(--primary);
-        }
+        .logo i { color: var(--primary); font-size: 1.8rem; }
 
         .nav-buttons {
             display: flex;
@@ -84,22 +83,18 @@
             color: var(--white);
         }
 
-        .nav-btn.primary:hover {
-            background: var(--primary-dark);
-        }
+        .nav-btn.primary:hover { background: var(--primary-dark); }
 
         .nav-btn.secondary {
-            background: var(--light-gray);
+            background: var(--light);
             color: var(--dark);
         }
 
-        .nav-btn.secondary:hover {
-            background: #e2e8f0;
-        }
+        .nav-btn.secondary:hover { background: #e2e8f0; }
 
         /* Container */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 24px;
         }
@@ -107,7 +102,7 @@
         /* Stats */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -117,16 +112,14 @@
             padding: 20px;
             border-radius: 12px;
             text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .stat-card i {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
+        .stat-card i { font-size: 1.5rem; margin-bottom: 8px; }
         .stat-card.blue i { color: var(--primary); }
         .stat-card.red i { color: var(--danger); }
         .stat-card.green i { color: var(--success); }
+        .stat-card.orange i { color: var(--warning); }
 
         .stat-number {
             font-size: 1.75rem;
@@ -135,19 +128,24 @@
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--gray);
             margin-top: 4px;
         }
 
-        /* Search */
-        .search-box {
+        /* Search & Filter */
+        .search-section {
             background: var(--white);
-            padding: 16px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .search-box {
             display: flex;
             gap: 12px;
+            margin-bottom: 16px;
         }
 
         .search-input {
@@ -157,18 +155,28 @@
             border-radius: 8px;
             font-size: 1rem;
             outline: none;
+            transition: border-color 0.2s;
         }
 
-        .search-input:focus {
-            border-color: var(--primary);
+        .search-input:focus { border-color: var(--primary); }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
         }
+
+        .search-btn:hover { background: var(--primary-dark); }
 
         /* Categories */
         .categories {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 24px;
         }
 
         .cat-btn {
@@ -179,6 +187,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .cat-btn:hover, .cat-btn.active {
@@ -198,14 +207,18 @@
             gap: 12px;
         }
 
-        .page-title i {
-            color: var(--primary);
+        .page-title i { color: var(--primary); }
+
+        .doc-count {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 400;
         }
 
         /* Documents Grid */
         .docs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 16px;
         }
 
@@ -214,6 +227,7 @@
             border-radius: 12px;
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .doc-card:hover {
@@ -221,28 +235,28 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.1);
         }
 
-        .doc-card.blocked {
-            opacity: 0.6;
-        }
+        .doc-card.blocked { opacity: 0.6; }
 
         .doc-header {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .doc-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--white);
+            flex-shrink: 0;
         }
 
+        /* Category Colors */
         .doc-card[data-cat="personal"] .doc-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
         .doc-card[data-cat="medical"] .doc-icon { background: linear-gradient(135deg, #10b981, #34d399); }
         .doc-card[data-cat="transport"] .doc-icon { background: linear-gradient(135deg, #f43f5e, #fb7185); }
@@ -250,49 +264,42 @@
         .doc-card[data-cat="property"] .doc-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
         .doc-card[data-cat="license"] .doc-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
         .doc-card[data-cat="education"] .doc-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .doc-card[data-cat="finance"] .doc-icon { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
+        .doc-card[data-cat="social"] .doc-icon { background: linear-gradient(135deg, #f97316, #fb923c); }
         .doc-card[data-cat="other"] .doc-icon { background: linear-gradient(135deg, #6b7280, #9ca3af); }
 
         .doc-info h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--dark);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            line-height: 1.3;
         }
 
         .doc-info p {
             font-size: 0.8rem;
             color: var(--gray);
+            line-height: 1.4;
         }
 
         .doc-body {
-            padding: 0 20px 20px;
+            padding: 0 16px 16px;
         }
 
         .doc-status {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
+            gap: 5px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-bottom: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .doc-status.available {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .doc-status.issued {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .doc-status.blocked {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+        .doc-status.available { background: #dcfce7; color: #166534; }
+        .doc-status.issued { background: #dbeafe; color: #1e40af; }
+        .doc-status.blocked { background: #fee2e2; color: #991b1b; }
 
         .doc-btn {
             width: 100%;
@@ -300,33 +307,19 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .doc-btn.apply {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .doc-btn.apply:hover {
-            background: var(--primary-dark);
-        }
-
-        .doc-btn.view {
-            background: var(--success);
-            color: var(--white);
-        }
-
-        .doc-btn.unlock {
-            background: var(--warning);
-            color: var(--white);
-        }
+        .doc-btn.apply { background: var(--primary); color: var(--white); }
+        .doc-btn.apply:hover { background: var(--primary-dark); }
+        .doc-btn.view { background: var(--success); color: var(--white); }
+        .doc-btn.unlock { background: var(--warning); color: var(--white); }
 
         /* Modal */
         .modal-overlay {
@@ -338,11 +331,10 @@
             align-items: center;
             z-index: 200;
             padding: 20px;
+            backdrop-filter: blur(4px);
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: var(--white);
@@ -355,8 +347,8 @@
         }
 
         @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .modal-header {
@@ -365,58 +357,65 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            z-index: 10;
         }
 
         .modal-header h2 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        .modal-header h2 i { color: var(--primary); }
+
         .close-btn {
-            background: none;
+            background: var(--light);
             border: none;
-            font-size: 1.25rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             cursor: pointer;
             color: var(--gray);
-            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .close-btn:hover {
-            color: var(--dark);
-        }
+        .close-btn:hover { background: #e2e8f0; color: var(--dark); }
 
-        .modal-body {
-            padding: 20px;
-        }
+        .modal-body { padding: 20px; }
 
         /* Form */
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .form-group { margin-bottom: 14px; }
 
         .form-group label {
             display: block;
             margin-bottom: 6px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--dark);
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 12px;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.2s;
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             border-color: var(--primary);
         }
 
@@ -433,44 +432,51 @@
             color: var(--white);
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
             margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .submit-btn:hover {
-            background: var(--primary-dark);
-        }
+        .submit-btn:hover { background: var(--primary-dark); }
+        .submit-btn.danger { background: var(--danger); }
+        .submit-btn.danger:hover { background: #b91c1c; }
 
-        .submit-btn.danger {
-            background: var(--danger);
-        }
-
-        /* Password Section */
+        /* Password Box */
         .password-box {
             background: #fef3c7;
             border: 1px solid #fcd34d;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px;
             margin-bottom: 20px;
         }
 
         .password-box h4 {
             color: #92400e;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .password-box p {
+            font-size: 0.85rem;
+            color: #a16207;
+            margin-bottom: 10px;
         }
 
         .password-box input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 12px;
             border: 1px solid #fcd34d;
             border-radius: 8px;
-            font-size: 1rem;
-            margin-top: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
         }
 
         .attempts-warn {
@@ -482,11 +488,11 @@
             gap: 6px;
         }
 
-        /* Unlock Section */
+        /* Unlock Box */
         .unlock-box {
             background: #fee2e2;
             border: 1px solid #fca5a5;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px;
             margin-bottom: 20px;
         }
@@ -494,22 +500,49 @@
         .unlock-box h4 {
             color: #991b1b;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .unlock-box p { color: #b91c1c; font-size: 0.9rem; }
+
+        .fee-display {
+            background: var(--white);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .fee-label { color: var(--gray); font-size: 0.85rem; }
         .fee-amount {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--primary);
-            margin: 12px 0;
         }
 
-        /* Document Display */
+        /* Document View */
         .document-view {
             background: linear-gradient(135deg, #f8fafc, #e2e8f0);
             border: 2px solid var(--dark);
             border-radius: 12px;
             padding: 24px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .document-view::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px dashed var(--gray);
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .doc-emblem {
@@ -518,13 +551,13 @@
         }
 
         .doc-emblem i {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--primary);
         }
 
         .doc-title-view {
             text-align: center;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--dark);
             margin-bottom: 20px;
@@ -534,27 +567,28 @@
 
         .doc-field {
             background: var(--white);
-            padding: 10px 14px;
+            padding: 10px 12px;
             border-radius: 6px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .doc-field-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--gray);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .doc-field-value {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--dark);
         }
 
         .doc-number-view {
             text-align: center;
-            font-family: monospace;
-            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
             color: var(--danger);
             margin-top: 16px;
             padding: 10px;
@@ -564,32 +598,34 @@
 
         .doc-stamp {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
+            bottom: 16px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
             border: 2px solid var(--danger);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--danger);
             text-align: center;
             font-weight: 700;
             transform: rotate(-15deg);
+            background: rgba(255,255,255,0.8);
         }
 
         /* My Docs */
         .my-doc-card {
             background: var(--white);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .my-doc-card:hover {
@@ -598,29 +634,29 @@
         }
 
         .my-doc-icon {
-            width: 56px;
-            height: 56px;
+            width: 48px;
+            height: 48px;
             background: var(--primary);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
-        .my-doc-info {
-            flex: 1;
-        }
-
+        .my-doc-info { flex: 1; min-width: 0; }
         .my-doc-info h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
         .my-doc-info p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--gray);
         }
 
@@ -635,14 +671,15 @@
         .toast {
             background: var(--white);
             padding: 14px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 12px;
             animation: slideIn 0.3s ease;
             min-width: 280px;
+            max-width: 400px;
         }
 
         @keyframes slideIn {
@@ -654,12 +691,16 @@
         .toast.error { border-left: 4px solid var(--danger); }
         .toast.warning { border-left: 4px solid var(--warning); }
 
+        .toast i { font-size: 1.2rem; }
         .toast.success i { color: var(--success); }
         .toast.error i { color: var(--danger); }
         .toast.warning i { color: var(--warning); }
 
+        .toast span { flex: 1; font-size: 0.9rem; }
+
         /* Empty State */
         .empty-state {
+            grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
             background: var(--white);
@@ -672,39 +713,44 @@
             margin-bottom: 16px;
         }
 
-        .empty-state h3 {
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
-
-        .empty-state p {
-            color: #94a3b8;
-        }
+        .empty-state h3 { color: var(--gray); margin-bottom: 8px; }
+        .empty-state p { color: #94a3b8; }
 
         /* Page */
-        .page {
-            display: none;
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Section Divider */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 16px;
+            color: var(--gray);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
-        .page.active {
-            display: block;
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
         }
 
         /* Responsive */
-        @media (max-width: 640px) {
-            .header-content {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .docs-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 12px; }
+            .form-row { grid-template-columns: 1fr; }
+            .docs-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--light); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body>
@@ -724,6 +770,9 @@
                 </button>
                 <button class="nav-btn secondary" onclick="showPage('myDocs')">
                     <i class="fas fa-folder"></i> Мои документы
+                </button>
+                <button class="nav-btn primary" onclick="showPage('catalog')">
+                    <i class="fas fa-plus"></i> Оформить
                 </button>
             </nav>
         </div>
@@ -745,35 +794,46 @@
             </div>
             <div class="stat-card green">
                 <i class="fas fa-check-circle"></i>
-                <div class="stat-number">30</div>
-                <div class="stat-label">Доступно услуг</div>
+                <div class="stat-number" id="statActive">0</div>
+                <div class="stat-label">Активных</div>
+            </div>
+            <div class="stat-card orange">
+                <i class="fas fa-list"></i>
+                <div class="stat-number">90</div>
+                <div class="stat-label">Всего услуг</div>
             </div>
         </section>
 
         <!-- Catalog Page -->
         <div class="page active" id="pageCatalog">
-            <!-- Search -->
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="Поиск документов..." onkeyup="handleSearch(event)">
-            </div>
+            <section class="search-section">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Поиск документов и услуг..." oninput="handleSearch()">
+                    <button class="search-btn" onclick="handleSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="categories">
+                    <button class="cat-btn active" data-cat="all">Все (90)</button>
+                    <button class="cat-btn" data-cat="personal">Личные</button>
+                    <button class="cat-btn" data-cat="medical">Медицина</button>
+                    <button class="cat-btn" data-cat="transport">Транспорт</button>
+                    <button class="cat-btn" data-cat="business">Бизнес</button>
+                    <button class="cat-btn" data-cat="property">Имущество</button>
+                    <button class="cat-btn" data-cat="license">Лицензии</button>
+                    <button class="cat-btn" data-cat="education">Образование</button>
+                    <button class="cat-btn" data-cat="finance">Финансы</button>
+                    <button class="cat-btn" data-cat="social">Социальные</button>
+                    <button class="cat-btn" data-cat="other">Прочее</button>
+                </div>
+            </section>
 
-            <!-- Categories -->
-            <div class="categories">
-                <button class="cat-btn active" data-cat="all">Все</button>
-                <button class="cat-btn" data-cat="personal">Личные</button>
-                <button class="cat-btn" data-cat="medical">Медицина</button>
-                <button class="cat-btn" data-cat="transport">Транспорт</button>
-                <button class="cat-btn" data-cat="business">Бизнес</button>
-                <button class="cat-btn" data-cat="property">Имущество</button>
-                <button class="cat-btn" data-cat="license">Лицензии</button>
-                <button class="cat-btn" data-cat="education">Образование</button>
-                <button class="cat-btn" data-cat="other">Прочее</button>
-            </div>
+            <h1 class="page-title">
+                <i class="fas fa-file-signature"></i> 
+                Каталог услуг 
+                <span class="doc-count" id="docCount">(90 документов)</span>
+            </h1>
 
-            <!-- Title -->
-            <h1 class="page-title"><i class="fas fa-file-signature"></i> Каталог услуг</h1>
-
-            <!-- Grid -->
             <div class="docs-grid" id="docsGrid"></div>
         </div>
 
@@ -818,38 +878,137 @@
     </div>
 
     <script>
-        // ============ DATABASE ============
+        // ============ DATABASE - 90 DOCUMENTS ============
         const DOCUMENTS = [
+            // === ЛИЧНЫЕ ДОКУМЕНТЫ (15) ===
             { id: 'passport', name: 'Паспорт гражданина', icon: 'fa-id-card', cat: 'personal', desc: 'Основной документ, удостоверяющий личность', pass: '7654099_tt', fields: ['fullName', 'birthDate', 'birthPlace', 'gender', 'address'] },
-            { id: 'medcard', name: 'Медицинская карта', icon: 'fa-notes-medical', cat: 'medical', desc: 'Сведения о состоянии здоровья', pass: 'med_2024_card', fields: ['fullName', 'birthDate', 'bloodType', 'allergies'] },
-            { id: 'driverLicense', name: 'Водительские права', icon: 'fa-car', cat: 'transport', desc: 'Права на управление ТС всех категорий', pass: 'drive_777_go', fields: ['fullName', 'birthDate', 'categories', 'experience'] },
-            { id: 'ipCert', name: 'Свидетельство ИП', icon: 'fa-store', cat: 'business', desc: 'Регистрация индивидуального предпринимателя', pass: 'ip_biz_2024', fields: ['fullName', 'inn', 'businessType', 'address'] },
-            { id: 'oooCert', name: 'Свидетельство ООО', icon: 'fa-building', cat: 'business', desc: 'Регистрация ООО', pass: 'ooo_corp_55', fields: ['companyName', 'director', 'inn', 'address'] },
+            { id: 'zagran', name: 'Загранпаспорт', icon: 'fa-passport', cat: 'personal', desc: 'Документ для выезда за рубеж', pass: 'zagran_789', fields: ['fullName', 'fullNameEn', 'birthDate', 'gender'] },
             { id: 'snils', name: 'СНИЛС', icon: 'fa-id-badge', cat: 'personal', desc: 'Страховой номер лицевого счёта', pass: 'snils_123_s', fields: ['fullName', 'birthDate', 'gender'] },
             { id: 'inn', name: 'ИНН', icon: 'fa-file-invoice-dollar', cat: 'personal', desc: 'Идентификационный номер налогоплательщика', pass: 'inn_tax_456', fields: ['fullName', 'birthDate', 'address'] },
-            { id: 'zagran', name: 'Загранпаспорт', icon: 'fa-passport', cat: 'personal', desc: 'Документ для выезда за рубеж', pass: 'zagran_789', fields: ['fullName', 'fullNameEn', 'birthDate', 'gender'] },
-            { id: 'oms', name: 'Полис ОМС', icon: 'fa-hospital', cat: 'medical', desc: 'Обязательное медицинское страхование', pass: 'oms_heal_32', fields: ['fullName', 'birthDate', 'insuranceCompany'] },
+            { id: 'birthCert', name: 'Свидетельство о рождении', icon: 'fa-baby', cat: 'personal', desc: 'Регистрация рождения', pass: 'birth_111_c', fields: ['childName', 'birthDate', 'birthPlace', 'fatherName', 'motherName'] },
+            { id: 'marriage', name: 'Свидетельство о браке', icon: 'fa-ring', cat: 'personal', desc: 'Регистрация брака', pass: 'marry_222_c', fields: ['spouse1', 'spouse2', 'marriageDate', 'registryOffice'] },
+            { id: 'divorce', name: 'Свидетельство о разводе', icon: 'fa-heart-broken', cat: 'personal', desc: 'Расторжение брака', pass: 'divorce_333', fields: ['spouse1', 'spouse2', 'divorceDate', 'registryOffice'] },
+            { id: 'death', name: 'Свидетельство о смерти', icon: 'fa-cross', cat: 'personal', desc: 'Регистрация смерти', pass: 'death_444_d', fields: ['deceasedName', 'deathDate', 'deathPlace', 'causeOfDeath'] },
+            { id: 'nameChange', name: 'Смена имени/фамилии', icon: 'fa-user-edit', cat: 'personal', desc: 'Перемена имени', pass: 'name_555_ch', fields: ['oldName', 'newName', 'reason', 'changeDate'] },
             { id: 'military', name: 'Военный билет', icon: 'fa-user-shield', cat: 'personal', desc: 'Документ воинского учёта', pass: 'army_654_id', fields: ['fullName', 'birthDate', 'rank', 'militaryUnit'] },
-            { id: 'birthCert', name: 'Свидетельство о рождении', icon: 'fa-baby', cat: 'personal', desc: 'Регистрация рождения', pass: 'birth_111_c', fields: ['childName', 'birthDate', 'fatherName', 'motherName'] },
-            { id: 'marriage', name: 'Свидетельство о браке', icon: 'fa-ring', cat: 'personal', desc: 'Регистрация брака', pass: 'marry_222_c', fields: ['spouse1', 'spouse2', 'marriageDate'] },
-            { id: 'property', name: 'Право собственности', icon: 'fa-home', cat: 'property', desc: 'Право на недвижимость', pass: 'prop_333_ow', fields: ['ownerName', 'propertyType', 'address', 'area'] },
-            { id: 'weapon', name: 'Разрешение на оружие', icon: 'fa-crosshairs', cat: 'license', desc: 'Хранение и ношение оружия', pass: 'gun_444_per', fields: ['fullName', 'weaponType', 'reason'] },
-            { id: 'security', name: 'Лицензия охранника', icon: 'fa-shield-alt', cat: 'license', desc: 'Удостоверение частного охранника', pass: 'guard_555_l', fields: ['fullName', 'birthDate', 'category'] },
-            { id: 'taxi', name: 'Лицензия таксиста', icon: 'fa-taxi', cat: 'transport', desc: 'Разрешение на деятельность такси', pass: 'taxi_666_li', fields: ['fullName', 'carModel', 'carNumber'] },
-            { id: 'pilot', name: 'Лицензия пилота', icon: 'fa-plane', cat: 'transport', desc: 'Свидетельство пилота', pass: 'pilot_777_f', fields: ['fullName', 'category', 'flightHours'] },
-            { id: 'diploma', name: 'Диплом об образовании', icon: 'fa-graduation-cap', cat: 'education', desc: 'Высшее/среднее образование', pass: 'edu_888_dip', fields: ['fullName', 'institution', 'specialty', 'graduationYear'] },
-            { id: 'workbook', name: 'Трудовая книжка', icon: 'fa-book', cat: 'personal', desc: 'Сведения о трудовой деятельности', pass: 'work_999_bo', fields: ['fullName', 'birthDate', 'profession'] },
-            { id: 'nocrime', name: 'Справка о несудимости', icon: 'fa-user-check', cat: 'other', desc: 'Отсутствие судимости', pass: 'clear_000_n', fields: ['fullName', 'birthDate', 'purpose'] },
-            { id: 'build', name: 'Разрешение на строительство', icon: 'fa-hard-hat', cat: 'property', desc: 'Строительство объекта', pass: 'build_aaa_p', fields: ['ownerName', 'objectType', 'address', 'area'] },
-            { id: 'doctor', name: 'Лицензия врача', icon: 'fa-user-md', cat: 'medical', desc: 'Сертификат медработника', pass: 'doc_bbb_med', fields: ['fullName', 'specialty', 'institution'] },
-            { id: 'lawyer', name: 'Лицензия адвоката', icon: 'fa-balance-scale', cat: 'license', desc: 'Удостоверение адвоката', pass: 'law_ccc_adv', fields: ['fullName', 'barAssociation', 'regNumber'] },
+            { id: 'workbook', name: 'Трудовая книжка', icon: 'fa-book', cat: 'personal', desc: 'Сведения о трудовой деятельности', pass: 'work_999_bo', fields: ['fullName', 'birthDate', 'profession', 'education'] },
+            { id: 'familyComp', name: 'Справка о составе семьи', icon: 'fa-users', cat: 'personal', desc: 'Состав семьи и прописка', pass: 'family_666', fields: ['fullName', 'address', 'familyMembers'] },
+            { id: 'residence', name: 'Справка с места жительства', icon: 'fa-home', cat: 'personal', desc: 'Подтверждение регистрации', pass: 'resid_777_r', fields: ['fullName', 'address', 'regDate'] },
+            { id: 'houseExtract', name: 'Выписка из домовой книги', icon: 'fa-book-open', cat: 'personal', desc: 'История регистрации', pass: 'house_888_e', fields: ['address', 'ownerName', 'registeredPersons'] },
+            { id: 'characterRef', name: 'Характеристика с работы', icon: 'fa-file-alt', cat: 'personal', desc: 'Характеристика сотрудника', pass: 'char_999_wr', fields: ['fullName', 'position', 'company', 'workPeriod'] },
+
+            // === МЕДИЦИНСКИЕ (12) ===
+            { id: 'medcard', name: 'Медицинская карта', icon: 'fa-notes-medical', cat: 'medical', desc: 'Сведения о состоянии здоровья', pass: 'med_2024_card', fields: ['fullName', 'birthDate', 'bloodType', 'allergies'] },
+            { id: 'oms', name: 'Полис ОМС', icon: 'fa-hospital', cat: 'medical', desc: 'Обязательное медицинское страхование', pass: 'oms_heal_32', fields: ['fullName', 'birthDate', 'insuranceCompany'] },
+            { id: 'sanbook', name: 'Санитарная книжка', icon: 'fa-hand-sparkles', cat: 'medical', desc: 'Медкнижка для работы', pass: 'san_book_11', fields: ['fullName', 'birthDate', 'workplace', 'position'] },
+            { id: 'medRef086', name: 'Справка 086/у', icon: 'fa-file-medical', cat: 'medical', desc: 'Справка для работы/учёбы', pass: 'ref086_222', fields: ['fullName', 'birthDate', 'purpose', 'conclusion'] },
+            { id: 'poolRef', name: 'Справка для бассейна', icon: 'fa-swimming-pool', cat: 'medical', desc: 'Допуск к посещению бассейна', pass: 'pool_333_sw', fields: ['fullName', 'birthDate', 'validUntil'] },
+            { id: 'narcologist', name: 'Справка от нарколога', icon: 'fa-prescription-bottle', cat: 'medical', desc: 'Отсутствие на учёте', pass: 'narc_444_cl', fields: ['fullName', 'birthDate', 'address'] },
+            { id: 'psychiatrist', name: 'Справка от психиатра', icon: 'fa-brain', cat: 'medical', desc: 'Психическое здоровье', pass: 'psych_555_m', fields: ['fullName', 'birthDate', 'address'] },
+            { id: 'vaccination', name: 'Сертификат прививок', icon: 'fa-syringe', cat: 'medical', desc: 'История вакцинации', pass: 'vac_666_cer', fields: ['fullName', 'birthDate', 'vaccinations'] },
+            { id: 'sickLeave', name: 'Больничный лист', icon: 'fa-bed', cat: 'medical', desc: 'Листок нетрудоспособности', pass: 'sick_777_lv', fields: ['fullName', 'diagnosis', 'startDate', 'endDate', 'doctorName'] },
+            { id: 'pregnancy', name: 'Справка о беременности', icon: 'fa-baby-carriage', cat: 'medical', desc: 'Подтверждение беременности', pass: 'preg_888_rf', fields: ['fullName', 'birthDate', 'term', 'dueDate'] },
+            { id: 'medDriver', name: 'Медсправка водителя', icon: 'fa-car-alt', cat: 'medical', desc: 'Допуск к управлению ТС', pass: 'med_drv_99', fields: ['fullName', 'birthDate', 'categories', 'restrictions'] },
+            { id: 'prescription', name: 'Рецепт на лекарство', icon: 'fa-prescription', cat: 'medical', desc: 'Рецептурный бланк', pass: 'recipe_000', fields: ['patientName', 'medication', 'dosage', 'doctorName'] },
+
+            // === ТРАНСПОРТ (12) ===
+            { id: 'driverLicense', name: 'Водительские права', icon: 'fa-id-card-alt', cat: 'transport', desc: 'Права на управление ТС', pass: 'drive_777_go', fields: ['fullName', 'birthDate', 'categories', 'experience'] },
+            { id: 'vehicleReg', name: 'СТС (регистрация авто)', icon: 'fa-car-side', cat: 'transport', desc: 'Свидетельство о регистрации ТС', pass: 'sts_auto_11', fields: ['ownerName', 'carBrand', 'carModel', 'plateNumber', 'vin'] },
+            { id: 'pts', name: 'ПТС', icon: 'fa-car', cat: 'transport', desc: 'Паспорт транспортного средства', pass: 'pts_2024_ts', fields: ['ownerName', 'carBrand', 'carModel', 'vin', 'engineNumber', 'color'] },
+            { id: 'osago', name: 'Полис ОСАГО', icon: 'fa-shield-alt', cat: 'transport', desc: 'Обязательное страхование', pass: 'osago_333', fields: ['ownerName', 'carModel', 'plateNumber', 'validUntil'] },
+            { id: 'kasko', name: 'Полис КАСКО', icon: 'fa-car-crash', cat: 'transport', desc: 'Добровольное страхование', pass: 'kasko_444', fields: ['ownerName', 'carModel', 'plateNumber', 'coverage', 'validUntil'] },
+            { id: 'techInspect', name: 'Диагностическая карта', icon: 'fa-clipboard-check', cat: 'transport', desc: 'Техосмотр автомобиля', pass: 'tech_555_di', fields: ['ownerName', 'carModel', 'plateNumber', 'inspectionDate', 'validUntil'] },
+            { id: 'taxi', name: 'Лицензия таксиста', icon: 'fa-taxi', cat: 'transport', desc: 'Разрешение на деятельность такси', pass: 'taxi_666_li', fields: ['fullName', 'carModel', 'carNumber', 'region'] },
+            { id: 'pilot', name: 'Лицензия пилота', icon: 'fa-plane', cat: 'transport', desc: 'Свидетельство пилота', pass: 'pilot_777_f', fields: ['fullName', 'category', 'flightHours', 'medicalClass'] },
+            { id: 'shipCaptain', name: 'Права судоводителя', icon: 'fa-ship', cat: 'transport', desc: 'Управление маломерными судами', pass: 'ship_888_cp', fields: ['fullName', 'birthDate', 'boatType', 'waterArea'] },
+            { id: 'tractor', name: 'Удостоверение тракториста', icon: 'fa-tractor', cat: 'transport', desc: 'Права на спецтехнику', pass: 'tract_999', fields: ['fullName', 'birthDate', 'categories', 'region'] },
+            { id: 'cargoLicense', name: 'Лицензия на грузоперевозки', icon: 'fa-truck', cat: 'transport', desc: 'Перевозка грузов', pass: 'cargo_aaa', fields: ['companyName', 'inn', 'vehicleTypes', 'regions'] },
+            { id: 'waybill', name: 'Путевой лист', icon: 'fa-route', cat: 'transport', desc: 'Документ на рейс', pass: 'way_bbb_bl', fields: ['driverName', 'carNumber', 'route', 'departureTime'] },
+
+            // === БИЗНЕС (15) ===
+            { id: 'ipCert', name: 'Свидетельство ИП', icon: 'fa-store', cat: 'business', desc: 'Регистрация ИП', pass: 'ip_biz_2024', fields: ['fullName', 'inn', 'businessType', 'address'] },
+            { id: 'oooCert', name: 'Свидетельство ООО', icon: 'fa-building', cat: 'business', desc: 'Регистрация ООО', pass: 'ooo_corp_55', fields: ['companyName', 'director', 'inn', 'ogrn', 'address'] },
+            { id: 'egrul', name: 'Выписка из ЕГРЮЛ', icon: 'fa-file-contract', cat: 'business', desc: 'Данные о юрлице', pass: 'egrul_111', fields: ['companyName', 'inn', 'ogrn', 'director'] },
+            { id: 'egrip', name: 'Выписка из ЕГРИП', icon: 'fa-file-signature', cat: 'business', desc: 'Данные об ИП', pass: 'egrip_222', fields: ['fullName', 'inn', 'ogrnip', 'businessType'] },
+            { id: 'charter', name: 'Устав организации', icon: 'fa-scroll', cat: 'business', desc: 'Учредительный документ', pass: 'chart_333', fields: ['companyName', 'founders', 'capital', 'activities'] },
+            { id: 'alcohol', name: 'Лицензия на алкоголь', icon: 'fa-wine-bottle', cat: 'business', desc: 'Продажа алкоголя', pass: 'alco_eee_li', fields: ['companyName', 'inn', 'address', 'licenseType'] },
+            { id: 'trade', name: 'Разрешение на торговлю', icon: 'fa-shopping-cart', cat: 'business', desc: 'Торговая деятельность', pass: 'trade_fff_s', fields: ['companyName', 'tradeType', 'address', 'area'] },
+            { id: 'quality', name: 'Сертификат качества', icon: 'fa-certificate', cat: 'business', desc: 'Соответствие продукции', pass: 'cert_ggg_qu', fields: ['productName', 'manufacturer', 'standards', 'validUntil'] },
             { id: 'patent', name: 'Патент на изобретение', icon: 'fa-lightbulb', cat: 'business', desc: 'Право на изобретение', pass: 'pat_ddd_inv', fields: ['inventorName', 'inventionName', 'description'] },
-            { id: 'alcohol', name: 'Лицензия на алкоголь', icon: 'fa-wine-bottle', cat: 'business', desc: 'Продажа алкогольной продукции', pass: 'alco_eee_li', fields: ['companyName', 'inn', 'address'] },
-            { id: 'trade', name: 'Разрешение на торговлю', icon: 'fa-shopping-cart', cat: 'business', desc: 'Торговая деятельность', pass: 'trade_fff_s', fields: ['companyName', 'tradeType', 'address'] },
-            { id: 'quality', name: 'Сертификат качества', icon: 'fa-certificate', cat: 'business', desc: 'Соответствие продукции', pass: 'cert_ggg_qu', fields: ['productName', 'manufacturer', 'standards'] },
-            { id: 'hunting', name: 'Лицензия на охоту', icon: 'fa-paw', cat: 'license', desc: 'Охотничий билет', pass: 'hunt_hhh_wi', fields: ['fullName', 'region', 'huntingType'] },
-            { id: 'visa', name: 'Виза', icon: 'fa-stamp', cat: 'other', desc: 'Разрешение на въезд', pass: 'visa_iii_tr', fields: ['fullName', 'country', 'visaType', 'entryDate'] },
-            { id: 'vehicleReg', name: 'Регистрация авто', icon: 'fa-car-side', cat: 'transport', desc: 'Свидетельство о регистрации ТС', pass: 'auto_jjj_re', fields: ['ownerName', 'carBrand', 'carModel', 'plateNumber', 'color'] }
+            { id: 'trademark', name: 'Товарный знак', icon: 'fa-trademark', cat: 'business', desc: 'Регистрация бренда', pass: 'tm_hhh_reg', fields: ['ownerName', 'brandName', 'classes', 'regDate'] },
+            { id: 'franchise', name: 'Договор франшизы', icon: 'fa-handshake', cat: 'business', desc: 'Франчайзинговое соглашение', pass: 'fran_iii', fields: ['franchisor', 'franchisee', 'brand', 'territory'] },
+            { id: 'lease', name: 'Договор аренды', icon: 'fa-file-contract', cat: 'business', desc: 'Аренда помещения', pass: 'lease_jjj', fields: ['landlord', 'tenant', 'address', 'rentAmount', 'period'] },
+            { id: 'sanConclusion', name: 'Санитарное заключение', icon: 'fa-check-double', cat: 'business', desc: 'Санэпидзаключение', pass: 'san_kkk_cl', fields: ['companyName', 'address', 'activityType', 'validUntil'] },
+            { id: 'firePermit', name: 'Пожарное разрешение', icon: 'fa-fire-extinguisher', cat: 'business', desc: 'Пожарная безопасность', pass: 'fire_lll', fields: ['companyName', 'address', 'buildingType', 'inspectionDate'] },
+            { id: 'ecoPermit', name: 'Экологическое разрешение', icon: 'fa-leaf', cat: 'business', desc: 'Экологическая экспертиза', pass: 'eco_mmm_pr', fields: ['companyName', 'activityType', 'emissionLimits'] },
+
+            // === ИМУЩЕСТВО (10) ===
+            { id: 'property', name: 'Право собственности', icon: 'fa-home', cat: 'property', desc: 'Право на недвижимость', pass: 'prop_333_ow', fields: ['ownerName', 'propertyType', 'address', 'area'] },
+            { id: 'egrn', name: 'Выписка из ЕГРН', icon: 'fa-file-alt', cat: 'property', desc: 'Данные о недвижимости', pass: 'egrn_nnn', fields: ['ownerName', 'address', 'cadastralNumber', 'area'] },
+            { id: 'cadastral', name: 'Кадастровый паспорт', icon: 'fa-map-marked-alt', cat: 'property', desc: 'Кадастровые данные', pass: 'cad_ooo_ps', fields: ['address', 'cadastralNumber', 'area', 'purpose'] },
+            { id: 'bti', name: 'Техпаспорт БТИ', icon: 'fa-drafting-compass', cat: 'property', desc: 'Технический паспорт', pass: 'bti_ppp_tp', fields: ['address', 'area', 'rooms', 'floor', 'year'] },
+            { id: 'build', name: 'Разрешение на строительство', icon: 'fa-hard-hat', cat: 'property', desc: 'Строительство объекта', pass: 'build_aaa_p', fields: ['developerName', 'objectType', 'address', 'area'] },
+            { id: 'demolition', name: 'Разрешение на снос', icon: 'fa-hammer', cat: 'property', desc: 'Снос здания', pass: 'demo_qqq', fields: ['ownerName', 'address', 'buildingType', 'reason'] },
+            { id: 'replanning', name: 'Разрешение на перепланировку', icon: 'fa-pencil-ruler', cat: 'property', desc: 'Изменение планировки', pass: 'replan_rrr', fields: ['ownerName', 'address', 'changes', 'approvalDate'] },
+            { id: 'landSurvey', name: 'Межевой план', icon: 'fa-draw-polygon', cat: 'property', desc: 'Границы участка', pass: 'land_sss', fields: ['ownerName', 'address', 'area', 'coordinates'] },
+            { id: 'saleDeed', name: 'Договор купли-продажи', icon: 'fa-file-invoice-dollar', cat: 'property', desc: 'Продажа недвижимости', pass: 'sale_ttt', fields: ['seller', 'buyer', 'address', 'price'] },
+            { id: 'giftDeed', name: 'Договор дарения', icon: 'fa-gift', cat: 'property', desc: 'Дарение имущества', pass: 'gift_uuu', fields: ['donor', 'recipient', 'propertyType', 'address'] },
+
+            // === ЛИЦЕНЗИИ И РАЗРЕШЕНИЯ (12) ===
+            { id: 'weapon', name: 'Разрешение на оружие', icon: 'fa-crosshairs', cat: 'license', desc: 'Хранение и ношение', pass: 'gun_444_per', fields: ['fullName', 'weaponType', 'serialNumber', 'reason'] },
+            { id: 'security', name: 'Лицензия охранника', icon: 'fa-shield-alt', cat: 'license', desc: 'Частный охранник', pass: 'guard_555_l', fields: ['fullName', 'birthDate', 'category', 'validUntil'] },
+            { id: 'hunting', name: 'Охотничий билет', icon: 'fa-paw', cat: 'license', desc: 'Право на охоту', pass: 'hunt_hhh_wi', fields: ['fullName', 'region', 'huntingType', 'validUntil'] },
+            { id: 'fishing', name: 'Лицензия на рыбалку', icon: 'fa-fish', cat: 'license', desc: 'Право на рыбную ловлю', pass: 'fish_vvv', fields: ['fullName', 'waterBody', 'fishType', 'validUntil'] },
+            { id: 'detective', name: 'Лицензия детектива', icon: 'fa-user-secret', cat: 'license', desc: 'Частный сыщик', pass: 'det_www_li', fields: ['fullName', 'birthDate', 'licenseNumber'] },
+            { id: 'notary', name: 'Лицензия нотариуса', icon: 'fa-stamp', cat: 'license', desc: 'Нотариальная деятельность', pass: 'not_xxx_li', fields: ['fullName', 'office', 'region', 'appointmentDate'] },
+            { id: 'lawyer', name: 'Удостоверение адвоката', icon: 'fa-balance-scale', cat: 'license', desc: 'Адвокатская деятельность', pass: 'law_ccc_adv', fields: ['fullName', 'barAssociation', 'regNumber'] },
+            { id: 'realtor', name: 'Лицензия риелтора', icon: 'fa-key', cat: 'license', desc: 'Операции с недвижимостью', pass: 'real_yyy', fields: ['fullName', 'agency', 'licenseNumber'] },
+            { id: 'electrician', name: 'Удостоверение электрика', icon: 'fa-bolt', cat: 'license', desc: 'Допуск к электроустановкам', pass: 'elec_zzz', fields: ['fullName', 'group', 'voltage', 'validUntil'] },
+            { id: 'welder', name: 'Удостоверение сварщика', icon: 'fa-fire', cat: 'license', desc: 'Квалификация сварщика', pass: 'weld_a1a1', fields: ['fullName', 'weldingType', 'category', 'validUntil'] },
+            { id: 'crane', name: 'Удостоверение крановщика', icon: 'fa-industry', cat: 'license', desc: 'Управление кранами', pass: 'crane_b2b2', fields: ['fullName', 'craneType', 'category', 'validUntil'] },
+            { id: 'secretAccess', name: 'Допуск к гостайне', icon: 'fa-user-lock', cat: 'license', desc: 'Секретный допуск', pass: 'secret_c3c3', fields: ['fullName', 'accessLevel', 'organization', 'validUntil'] },
+
+            // === ОБРАЗОВАНИЕ (10) ===
+            { id: 'diploma', name: 'Диплом о высшем образовании', icon: 'fa-graduation-cap', cat: 'education', desc: 'Высшее образование', pass: 'edu_888_dip', fields: ['fullName', 'institution', 'specialty', 'graduationYear', 'honors'] },
+            { id: 'schoolCert', name: 'Аттестат школы', icon: 'fa-school', cat: 'education', desc: 'Среднее образование', pass: 'school_d4d4', fields: ['fullName', 'school', 'graduationYear', 'grades'] },
+            { id: 'egeCert', name: 'Сертификат ЕГЭ', icon: 'fa-file-alt', cat: 'education', desc: 'Результаты ЕГЭ', pass: 'ege_e5e5', fields: ['fullName', 'subjects', 'scores', 'year'] },
+            { id: 'studentId', name: 'Студенческий билет', icon: 'fa-id-card', cat: 'education', desc: 'Удостоверение студента', pass: 'stud_f6f6', fields: ['fullName', 'institution', 'faculty', 'admissionYear'] },
+            { id: 'gradeBook', name: 'Зачётная книжка', icon: 'fa-book-open', cat: 'education', desc: 'Оценки студента', pass: 'grade_g7g7', fields: ['fullName', 'institution', 'faculty', 'course'] },
+            { id: 'phdDiploma', name: 'Диплом кандидата наук', icon: 'fa-user-graduate', cat: 'education', desc: 'Кандидатская степень', pass: 'phd_h8h8', fields: ['fullName', 'institution', 'specialty', 'defenseDate'] },
+            { id: 'docDiploma', name: 'Диплом доктора наук', icon: 'fa-award', cat: 'education', desc: 'Докторская степень', pass: 'doc_i9i9', fields: ['fullName', 'institution', 'specialty', 'defenseDate'] },
+            { id: 'courseCert', name: 'Сертификат курсов', icon: 'fa-certificate', cat: 'education', desc: 'Прохождение курсов', pass: 'course_j0j0', fields: ['fullName', 'courseName', 'provider', 'completionDate', 'hours'] },
+            { id: 'profDev', name: 'Повышение квалификации', icon: 'fa-chart-line', cat: 'education', desc: 'Удостоверение о повышении', pass: 'prof_k1k1', fields: ['fullName', 'program', 'institution', 'hours', 'completionDate'] },
+            { id: 'profCert', name: 'Свидетельство о профессии', icon: 'fa-tools', cat: 'education', desc: 'Рабочая профессия', pass: 'profc_l2l2', fields: ['fullName', 'profession', 'institution', 'qualification'] },
+
+            // === ФИНАНСЫ (8) ===
+            { id: 'ndfl', name: 'Справка 2-НДФЛ', icon: 'fa-file-invoice-dollar', cat: 'finance', desc: 'Справка о доходах', pass: 'ndfl_m3m3', fields: ['fullName', 'employer', 'year', 'income', 'tax'] },
+            { id: 'bankRef', name: 'Справка из банка', icon: 'fa-university', cat: 'finance', desc: 'Выписка по счёту', pass: 'bank_n4n4', fields: ['fullName', 'bankName', 'accountNumber', 'balance'] },
+            { id: 'creditContract', name: 'Кредитный договор', icon: 'fa-hand-holding-usd', cat: 'finance', desc: 'Договор кредитования', pass: 'cred_o5o5', fields: ['borrowerName', 'bankName', 'amount', 'rate', 'term'] },
+            { id: 'lifeInsurance', name: 'Страхование жизни', icon: 'fa-heart', cat: 'finance', desc: 'Полис страхования жизни', pass: 'life_p6p6', fields: ['insuredName', 'company', 'coverage', 'beneficiary', 'validUntil'] },
+            { id: 'noDebt', name: 'Справка об отсутствии долгов', icon: 'fa-check-circle', cat: 'finance', desc: 'Отсутствие задолженности', pass: 'nodebt_q7q7', fields: ['fullName', 'address', 'issueDate'] },
+            { id: 'taxReturn', name: 'Налоговая декларация', icon: 'fa-file-alt', cat: 'finance', desc: 'Декларация 3-НДФЛ', pass: 'tax_r8r8', fields: ['fullName', 'year', 'income', 'deductions', 'taxDue'] },
+            { id: 'pension', name: 'Пенсионное удостоверение', icon: 'fa-id-badge', cat: 'finance', desc: 'Статус пенсионера', pass: 'pen_s9s9', fields: ['fullName', 'birthDate', 'pensionType', 'assignmentDate'] },
+            { id: 'socialCard', name: 'Социальная карта', icon: 'fa-credit-card', cat: 'finance', desc: 'Карта льготника', pass: 'soc_t0t0', fields: ['fullName', 'birthDate', 'category', 'validUntil'] },
+
+            // === СОЦИАЛЬНЫЕ (8) ===
+            { id: 'veteran', name: 'Удостоверение ветерана', icon: 'fa-medal', cat: 'social', desc: 'Статус ветерана', pass: 'vet_u1u1', fields: ['fullName', 'birthDate', 'veteranType', 'issueDate'] },
+            { id: 'disability', name: 'Справка об инвалидности', icon: 'fa-wheelchair', cat: 'social', desc: 'Группа инвалидности', pass: 'dis_v2v2', fields: ['fullName', 'birthDate', 'group', 'validUntil'] },
+            { id: 'childExit', name: 'Разрешение на выезд ребёнка', icon: 'fa-plane-departure', cat: 'social', desc: 'Согласие на выезд', pass: 'exit_w3w3', fields: ['childName', 'parentName', 'destination', 'period'] },
+            { id: 'adoption', name: 'Свидетельство об усыновлении', icon: 'fa-hands-helping', cat: 'social', desc: 'Усыновление ребёнка', pass: 'adopt_x4x4', fields: ['childName', 'adoptiveParents', 'adoptionDate'] },
+            { id: 'guardianship', name: 'Опекунство', icon: 'fa-user-friends', cat: 'social', desc: 'Документ об опеке', pass: 'guard_y5y5', fields: ['guardianName', 'wardName', 'appointmentDate'] },
+            { id: 'maternity', name: 'Материнский капитал', icon: 'fa-baby', cat: 'social', desc: 'Сертификат на маткапитал', pass: 'mat_z6z6', fields: ['motherName', 'childrenCount', 'amount', 'issueDate'] },
+            { id: 'unemployed', name: 'Статус безработного', icon: 'fa-user-times', cat: 'social', desc: 'Постановка на учёт', pass: 'unemp_a7a7', fields: ['fullName', 'birthDate', 'registrationDate', 'benefit'] },
+            { id: 'refugee', name: 'Статус беженца', icon: 'fa-globe', cat: 'social', desc: 'Удостоверение беженца', pass: 'ref_b8b8', fields: ['fullName', 'birthDate', 'country', 'issueDate'] },
+
+            // === ПРОЧЕЕ (8) ===
+            { id: 'nocrime', name: 'Справка о несудимости', icon: 'fa-user-check', cat: 'other', desc: 'Отсутствие судимости', pass: 'clear_000_n', fields: ['fullName', 'birthDate', 'birthPlace', 'purpose'] },
+            { id: 'visa', name: 'Виза', icon: 'fa-stamp', cat: 'other', desc: 'Разрешение на въезд', pass: 'visa_iii_tr', fields: ['fullName', 'country', 'visaType', 'entryDate', 'exitDate'] },
+            { id: 'poa', name: 'Доверенность', icon: 'fa-file-signature', cat: 'other', desc: 'Передача полномочий', pass: 'poa_c9c9', fields: ['principalName', 'agentName', 'powers', 'validUntil'] },
+            { id: 'will', name: 'Завещание', icon: 'fa-scroll', cat: 'other', desc: 'Распоряжение имуществом', pass: 'will_d0d0', fields: ['testatorName', 'beneficiaries', 'notaryName', 'date'] },
+            { id: 'consent', name: 'Согласие на обработку данных', icon: 'fa-user-shield', cat: 'other', desc: 'Персональные данные', pass: 'cons_e1e1', fields: ['fullName', 'organization', 'purpose', 'date'] },
+            { id: 'reference', name: 'Рекомендательное письмо', icon: 'fa-envelope-open-text', cat: 'other', desc: 'Рекомендация', pass: 'rec_f2f2', fields: ['candidateName', 'recommenderName', 'company', 'position'] },
+            { id: 'apostille', name: 'Апостиль', icon: 'fa-globe-americas', cat: 'other', desc: 'Легализация документа', pass: 'apos_g3g3', fields: ['documentType', 'issuingCountry', 'targetCountry', 'date'] },
+            { id: 'translation', name: 'Нотариальный перевод', icon: 'fa-language', cat: 'other', desc: 'Перевод документа', pass: 'trans_h4h4', fields: ['documentType', 'fromLanguage', 'toLanguage', 'translatorName'] }
         ];
 
         const UNLOCK_PASS = '7654099_unlock';
@@ -858,7 +1017,7 @@
         const LABELS = {
             fullName: 'ФИО', fullNameEn: 'ФИО (латиница)', birthDate: 'Дата рождения', birthPlace: 'Место рождения',
             gender: 'Пол', address: 'Адрес', bloodType: 'Группа крови', allergies: 'Аллергии',
-            categories: 'Категории (A,B,C,D,E)', experience: 'Стаж', inn: 'ИНН', businessType: 'Вид деятельности',
+            categories: 'Категории', experience: 'Стаж', inn: 'ИНН', businessType: 'Вид деятельности',
             companyName: 'Название компании', director: 'Директор', insuranceCompany: 'Страховая компания',
             rank: 'Звание', militaryUnit: 'Часть', childName: 'ФИО ребёнка', fatherName: 'ФИО отца',
             motherName: 'ФИО матери', spouse1: 'ФИО супруга', spouse2: 'ФИО супруги', marriageDate: 'Дата брака',
@@ -870,19 +1029,59 @@
             inventionName: 'Название', description: 'Описание', manufacturer: 'Производитель',
             standards: 'Стандарты', tradeType: 'Вид торговли', productName: 'Продукция', region: 'Регион',
             huntingType: 'Вид охоты', country: 'Страна', visaType: 'Тип визы', entryDate: 'Дата въезда',
-            carBrand: 'Марка', plateNumber: 'Номер', color: 'Цвет'
+            carBrand: 'Марка', plateNumber: 'Номер', color: 'Цвет', vin: 'VIN', ogrn: 'ОГРН', ogrnip: 'ОГРНИП',
+            registryOffice: 'ЗАГС', divorceDate: 'Дата развода', deceasedName: 'ФИО умершего',
+            deathDate: 'Дата смерти', deathPlace: 'Место смерти', causeOfDeath: 'Причина смерти',
+            oldName: 'Старое имя', newName: 'Новое имя', changeDate: 'Дата изменения',
+            familyMembers: 'Члены семьи', regDate: 'Дата регистрации', registeredPersons: 'Зарегистрированные',
+            position: 'Должность', company: 'Компания', workPeriod: 'Период работы',
+            workplace: 'Место работы', conclusion: 'Заключение', validUntil: 'Действительно до',
+            vaccinations: 'Прививки', diagnosis: 'Диагноз', startDate: 'Дата начала', endDate: 'Дата окончания',
+            doctorName: 'Врач', term: 'Срок', dueDate: 'Дата родов', restrictions: 'Ограничения',
+            patientName: 'Пациент', medication: 'Препарат', dosage: 'Дозировка',
+            engineNumber: 'Номер двигателя', coverage: 'Покрытие', inspectionDate: 'Дата осмотра',
+            medicalClass: 'Мед. класс', boatType: 'Тип судна', waterArea: 'Акватория',
+            vehicleTypes: 'Типы ТС', regions: 'Регионы', driverName: 'Водитель', route: 'Маршрут',
+            departureTime: 'Время выезда', founders: 'Учредители', capital: 'Уставный капитал',
+            activities: 'Виды деятельности', licenseType: 'Тип лицензии', franchisor: 'Франчайзер',
+            franchisee: 'Франчайзи', brand: 'Бренд', territory: 'Территория', landlord: 'Арендодатель',
+            tenant: 'Арендатор', rentAmount: 'Арендная плата', period: 'Срок', activityType: 'Вид деятельности',
+            buildingType: 'Тип здания', emissionLimits: 'Лимиты выбросов', cadastralNumber: 'Кадастровый номер',
+            rooms: 'Количество комнат', floor: 'Этаж', year: 'Год постройки', developerName: 'Застройщик',
+            changes: 'Изменения', approvalDate: 'Дата согласования', coordinates: 'Координаты',
+            seller: 'Продавец', buyer: 'Покупатель', price: 'Цена', donor: 'Даритель', recipient: 'Получатель',
+            serialNumber: 'Серийный номер', waterBody: 'Водоём', fishType: 'Вид рыбы',
+            licenseNumber: 'Номер лицензии', office: 'Контора', appointmentDate: 'Дата назначения',
+            agency: 'Агентство', group: 'Группа', voltage: 'Напряжение', weldingType: 'Тип сварки',
+            craneType: 'Тип крана', accessLevel: 'Уровень доступа', organization: 'Организация',
+            honors: 'С отличием', school: 'Школа', grades: 'Оценки', subjects: 'Предметы', scores: 'Баллы',
+            faculty: 'Факультет', admissionYear: 'Год поступления', course: 'Курс', defenseDate: 'Дата защиты',
+            courseName: 'Название курса', provider: 'Провайдер', completionDate: 'Дата завершения', hours: 'Часы',
+            program: 'Программа', qualification: 'Квалификация', employer: 'Работодатель', income: 'Доход',
+            tax: 'Налог', bankName: 'Банк', accountNumber: 'Номер счёта', balance: 'Баланс',
+            borrowerName: 'Заёмщик', amount: 'Сумма', rate: 'Ставка', insuredName: 'Застрахованный',
+            beneficiary: 'Выгодоприобретатель', issueDate: 'Дата выдачи', deductions: 'Вычеты', taxDue: 'К уплате',
+            pensionType: 'Тип пенсии', assignmentDate: 'Дата назначения', veteranType: 'Тип ветерана',
+            destination: 'Направление', adoptiveParents: 'Приёмные родители', adoptionDate: 'Дата усыновления',
+            guardianName: 'Опекун', wardName: 'Подопечный', motherName2: 'ФИО матери', childrenCount: 'Количество детей',
+            registrationDate: 'Дата регистрации', benefit: 'Пособие', exitDate: 'Дата выезда',
+            principalName: 'Доверитель', agentName: 'Доверенное лицо', powers: 'Полномочия',
+            testatorName: 'Завещатель', beneficiaries: 'Наследники', notaryName: 'Нотариус', date: 'Дата',
+            candidateName: 'Кандидат', recommenderName: 'Рекомендатель', documentType: 'Тип документа',
+            issuingCountry: 'Страна выдачи', targetCountry: 'Целевая страна', fromLanguage: 'С языка',
+            toLanguage: 'На язык', translatorName: 'Переводчик', education: 'Образование', classes: 'Классы МКТУ'
         };
 
         // ============ STATE ============
         let state = { documents: [], attempts: {}, blocked: [] };
 
         function loadState() {
-            const saved = localStorage.getItem('cityState');
+            const saved = localStorage.getItem('cityState90');
             if (saved) state = JSON.parse(saved);
         }
 
         function saveState() {
-            localStorage.setItem('cityState', JSON.stringify(state));
+            localStorage.setItem('cityState90', JSON.stringify(state));
         }
 
         // ============ INIT ============
@@ -903,6 +1102,19 @@
             if (search) {
                 const s = search.toLowerCase();
                 docs = docs.filter(d => d.name.toLowerCase().includes(s) || d.desc.toLowerCase().includes(s));
+            }
+
+            document.getElementById('docCount').textContent = `(${docs.length} документов)`;
+
+            if (docs.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Ничего не найдено</h3>
+                        <p>Попробуйте изменить параметры поиска</p>
+                    </div>
+                `;
+                return;
             }
 
             docs.forEach(doc => {
@@ -947,10 +1159,13 @@
 
             if (state.documents.length === 0) {
                 grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state">
                         <i class="fas fa-folder-open"></i>
                         <h3>Нет оформленных документов</h3>
                         <p>Перейдите в каталог для оформления</p>
+                        <button class="submit-btn" style="max-width: 250px; margin: 20px auto 0;" onclick="showPage('catalog')">
+                            <i class="fas fa-plus"></i> Оформить документ
+                        </button>
                     </div>
                 `;
                 return;
@@ -967,7 +1182,7 @@
                     <div class="my-doc-icon"><i class="fas ${doc.icon}"></i></div>
                     <div class="my-doc-info">
                         <h3>${doc.name}</h3>
-                        <p>№ ${ud.number} • Выдан: ${ud.issueDate}</p>
+                        <p>№ ${ud.number} • ${ud.issueDate}</p>
                     </div>
                     <i class="fas fa-chevron-right" style="color: var(--gray);"></i>
                 `;
@@ -978,6 +1193,7 @@
         function updateStats() {
             document.getElementById('statTotal').textContent = state.documents.length;
             document.getElementById('statBlocked').textContent = state.blocked.length;
+            document.getElementById('statActive').textContent = state.documents.length;
         }
 
         // ============ MODALS ============
@@ -991,46 +1207,49 @@
             let html = `
                 <div class="password-box">
                     <h4><i class="fas fa-key"></i> Код доступа</h4>
-                    <p style="font-size: 0.9rem; color: #92400e;">Введите служебный код для оформления</p>
-                    <input type="text" id="passInput" placeholder="Введите код">
+                    <p>Введите служебный код для оформления документа</p>
+                    <input type="text" id="passInput" placeholder="Введите код доступа" autocomplete="off">
                     ${attempts > 0 ? `<p class="attempts-warn"><i class="fas fa-exclamation-triangle"></i> Осталось попыток: ${3 - attempts}</p>` : ''}
                 </div>
-                <h4 style="margin-bottom: 16px;">Заполните данные</h4>
+                <div class="section-divider"><i class="fas fa-user"></i> Данные для документа</div>
             `;
 
             doc.fields.forEach((f, i) => {
-                const isRow = i % 2 === 0;
+                const isEven = i % 2 === 0;
                 const isLast = i === doc.fields.length - 1;
-                const isOdd = doc.fields.length % 2 === 1;
+                const totalOdd = doc.fields.length % 2 === 1;
 
-                if (isRow) html += '<div class="form-row">';
+                if (isEven) html += '<div class="form-row">';
 
                 if (f === 'gender') {
                     html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>Мужской</option><option>Женский</option></select></div>`;
                 } else if (f === 'bloodType') {
-                    html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>I (O)</option><option>II (A)</option><option>III (B)</option><option>IV (AB)</option></select></div>`;
+                    html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>I (O)+</option><option>I (O)-</option><option>II (A)+</option><option>II (A)-</option><option>III (B)+</option><option>III (B)-</option><option>IV (AB)+</option><option>IV (AB)-</option></select></div>`;
+                } else if (f === 'honors') {
+                    html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>Нет</option><option>Да</option></select></div>`;
                 } else {
                     const type = f.toLowerCase().includes('date') ? 'date' : 'text';
                     html += `<div class="form-group"><label>${LABELS[f] || f}</label><input type="${type}" id="f_${f}" placeholder="${LABELS[f] || f}"></div>`;
                 }
 
-                if (!isRow || (isLast && isOdd)) html += '</div>';
+                if (!isEven || (isLast && totalOdd)) html += '</div>';
             });
 
-            html += `<button class="submit-btn" onclick="submitApply('${docId}')"><i class="fas fa-paper-plane"></i> Оформить</button>`;
+            html += `
+                <button class="submit-btn" onclick="submitApply('${docId}')">
+                    <i class="fas fa-paper-plane"></i> Оформить документ
+                </button>
+            `;
 
             document.getElementById('applyBody').innerHTML = html;
             document.getElementById('modalApply').classList.add('active');
+            setTimeout(() => document.getElementById('passInput').focus(), 100);
         }
 
         function submitApply(docId) {
             const doc = DOCUMENTS.find(d => d.id === docId);
             const passInput = document.getElementById('passInput');
             const enteredPass = passInput.value.trim();
-
-            console.log('Entered:', enteredPass);
-            console.log('Expected:', doc.pass);
-            console.log('Match:', enteredPass === doc.pass);
 
             if (enteredPass !== doc.pass) {
                 state.attempts[docId] = (state.attempts[docId] || 0) + 1;
@@ -1039,31 +1258,31 @@
                     state.blocked.push(docId);
                     saveState();
                     closeModal('modalApply');
-                    toast('Услуга заблокирована!', 'error');
+                    toast('Услуга заблокирована! Превышено количество попыток.', 'error');
                     renderGrid();
                     updateStats();
                     return;
                 }
 
                 saveState();
-                toast(`Неверный код! Осталось: ${3 - state.attempts[docId]}`, 'error');
+                toast(`Неверный код! Осталось попыток: ${3 - state.attempts[docId]}`, 'error');
                 closeModal('modalApply');
-                openApply(docId);
+                setTimeout(() => openApply(docId), 200);
                 return;
             }
 
             // Collect data
             const data = {};
-            let ok = true;
+            let allFilled = true;
             doc.fields.forEach(f => {
                 const el = document.getElementById('f_' + f);
                 if (el) {
                     data[f] = el.value;
-                    if (!el.value) ok = false;
+                    if (!el.value) allFilled = false;
                 }
             });
 
-            if (!ok) {
+            if (!allFilled) {
                 toast('Заполните все поля', 'warning');
                 return;
             }
@@ -1084,7 +1303,7 @@
             delete state.attempts[docId];
             saveState();
             closeModal('modalApply');
-            toast('Документ оформлен!', 'success');
+            toast('Документ успешно оформлен!', 'success');
             renderGrid();
             updateStats();
         }
@@ -1106,20 +1325,28 @@
                     <div class="doc-emblem"><i class="fas ${doc.icon}"></i></div>
                     <div class="doc-title-view">${doc.name}</div>
                     ${fields}
-                    <div class="doc-field"><div class="doc-field-label">Дата выдачи</div><div class="doc-field-value">${ud.issueDate}</div></div>
-                    <div class="doc-field"><div class="doc-field-label">Действителен до</div><div class="doc-field-value">${ud.validUntil}</div></div>
-                    <div class="doc-number-view"><i class="fas fa-barcode"></i> № ${ud.number}</div>
+                    <div class="doc-field">
+                        <div class="doc-field-label">Дата выдачи</div>
+                        <div class="doc-field-value">${ud.issueDate}</div>
+                    </div>
+                    <div class="doc-field">
+                        <div class="doc-field-label">Действителен до</div>
+                        <div class="doc-field-value">${ud.validUntil}</div>
+                    </div>
+                    <div class="doc-number-view">
+                        <i class="fas fa-barcode"></i> № ${ud.number}
+                    </div>
                     <div class="doc-stamp">ГОРОД<br>УСЛУГИ<br>✓</div>
                 </div>
                 <button class="submit-btn danger" style="margin-top: 16px;" onclick="deleteDoc('${docId}')">
-                    <i class="fas fa-trash"></i> Удалить
+                    <i class="fas fa-trash"></i> Удалить документ
                 </button>
             `;
             document.getElementById('modalView').classList.add('active');
         }
 
         function deleteDoc(docId) {
-            if (!confirm('Удалить документ?')) return;
+            if (!confirm('Вы уверены, что хотите удалить этот документ?')) return;
             state.documents = state.documents.filter(d => d.docId !== docId);
             saveState();
             closeModal('modalView');
@@ -1136,26 +1363,27 @@
             document.getElementById('unlockBody').innerHTML = `
                 <div class="unlock-box">
                     <h4><i class="fas fa-exclamation-circle"></i> Услуга заблокирована</h4>
-                    <p>Для разблокировки "${doc.name}" оплатите госпошлину</p>
+                    <p>Для разблокировки "${doc.name}" необходимо оплатить государственную пошлину</p>
                 </div>
-                <div class="form-group">
-                    <label>Госпошлина</label>
+                <div class="fee-display">
+                    <div class="fee-label">Размер госпошлины</div>
                     <div class="fee-amount">${FEE.toLocaleString()} ₽</div>
                 </div>
                 <div class="form-group">
                     <label>Способ оплаты</label>
                     <select id="payMethod">
-                        <option value="">Выберите...</option>
-                        <option value="card">Карта</option>
-                        <option value="qr">QR-код</option>
+                        <option value="">Выберите способ...</option>
+                        <option value="card">Банковская карта</option>
+                        <option value="qr">QR-код СБП</option>
+                        <option value="cash">Наличные в кассе</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Код разблокировки</label>
-                    <input type="text" id="unlockPass" placeholder="Введите код">
+                    <input type="text" id="unlockPass" placeholder="Введите код разблокировки" autocomplete="off">
                 </div>
                 <button class="submit-btn danger" onclick="submitUnlock('${docId}')">
-                    <i class="fas fa-unlock"></i> Разблокировать
+                    <i class="fas fa-unlock"></i> Разблокировать услугу
                 </button>
             `;
             document.getElementById('modalUnlock').classList.add('active');
@@ -1171,7 +1399,7 @@
             }
 
             if (pass !== UNLOCK_PASS) {
-                toast('Неверный код разблокировки', 'error');
+                toast('Неверный код разблокировки!', 'error');
                 return;
             }
 
@@ -1180,7 +1408,7 @@
             saveState();
 
             closeModal('modalUnlock');
-            toast('Услуга разблокирована!', 'success');
+            toast('Услуга успешно разблокирована!', 'success');
             renderGrid();
             updateStats();
         }
@@ -1191,7 +1419,10 @@
 
         // ============ UTILS ============
         function genNumber() {
-            return `${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`;
+            const p1 = Math.floor(1000 + Math.random() * 9000);
+            const p2 = Math.floor(1000 + Math.random() * 9000);
+            const p3 = Math.floor(1000 + Math.random() * 9000);
+            return `${p1}-${p2}-${p3}`;
         }
 
         function toast(msg, type = 'success') {
@@ -1201,7 +1432,11 @@
             const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-circle' };
             t.innerHTML = `<i class="fas ${icons[type]}"></i><span>${msg}</span>`;
             c.appendChild(t);
-            setTimeout(() => { t.remove(); }, 3000);
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transform = 'translateX(100px)';
+                setTimeout(() => t.remove(), 300);
+            }, 3500);
         }
 
         function showPage(page) {
@@ -1220,23 +1455,32 @@
                 btn.onclick = () => {
                     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    renderGrid(btn.dataset.cat, document.getElementById('searchInput').value);
+                    const search = document.getElementById('searchInput').value;
+                    renderGrid(btn.dataset.cat, search);
                 };
             });
         }
 
-        function handleSearch(e) {
+        function handleSearch() {
             const cat = document.querySelector('.cat-btn.active').dataset.cat;
-            renderGrid(cat, e.target.value);
+            const search = document.getElementById('searchInput').value;
+            renderGrid(cat, search);
         }
 
-        // Close on overlay
+        // Close modal on overlay click
         document.querySelectorAll('.modal-overlay').forEach(m => {
             m.onclick = e => { if (e.target === m) m.classList.remove('active'); };
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
         });
 
         // Init
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-  </html>
+    </html>
