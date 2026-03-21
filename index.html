@@ -1,55 +1,1242 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Patch Loader</title>
-<style>
-body { margin: 0; padding: 0; overflow: hidden; background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
-canvas { position: absolute; top: 0; left: 0; z-index: 1; }
-.container { position: relative; z-index: 2; text-align: center; background: rgba(15, 15, 20, 0.85); padding: 40px; border-radius: 16px; box-shadow: 0 0 30px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
-h1 { font-size: 26px; margin: 0 0 10px 0; font-weight: 600; }
-p { font-size: 18px; margin: 0 0 30px 0; color: #b0b0b0; }
-a.btn { display: inline-block; padding: 14px 35px; background: #ffffff; color: #000000; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 16px; transition: all 0.3s ease; }
-a.btn:hover { background: #e0e0e0; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); transform: translateY(-3px); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ГородУслуги</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --white: #ffffff;
+        }
+
+        body {
+            background: var(--light-gray);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 16px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn.primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .nav-btn.secondary {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .nav-btn.secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card.blue i { color: var(--primary); }
+        .stat-card.red i { color: var(--danger); }
+        .stat-card.green i { color: var(--success); }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        /* Search */
+        .search-box {
+            background: var(--white);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .cat-btn {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            background: var(--white);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        /* Documents Grid */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .doc-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .doc-card.blocked {
+            opacity: 0.6;
+        }
+
+        .doc-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .doc-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--white);
+        }
+
+        .doc-card[data-cat="personal"] .doc-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .doc-card[data-cat="medical"] .doc-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .doc-card[data-cat="transport"] .doc-icon { background: linear-gradient(135deg, #f43f5e, #fb7185); }
+        .doc-card[data-cat="business"] .doc-icon { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .doc-card[data-cat="property"] .doc-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .doc-card[data-cat="license"] .doc-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .doc-card[data-cat="education"] .doc-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .doc-card[data-cat="other"] .doc-icon { background: linear-gradient(135deg, #6b7280, #9ca3af); }
+
+        .doc-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .doc-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .doc-body {
+            padding: 0 20px 20px;
+        }
+
+        .doc-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .doc-status.available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .doc-status.issued {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .doc-status.blocked {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .doc-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .doc-btn.apply {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .doc-btn.apply:hover {
+            background: var(--primary-dark);
+        }
+
+        .doc-btn.view {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .doc-btn.unlock {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.2s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 4px;
+        }
+
+        .close-btn:hover {
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .submit-btn.danger {
+            background: var(--danger);
+        }
+
+        /* Password Section */
+        .password-box {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .password-box h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+
+        .attempts-warn {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Unlock Section */
+        .unlock-box {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .unlock-box h4 {
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .fee-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 12px 0;
+        }
+
+        /* Document Display */
+        .document-view {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid var(--dark);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .doc-emblem {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .doc-emblem i {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .doc-title-view {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .doc-field {
+            background: var(--white);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .doc-field-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        .doc-field-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .doc-number-view {
+            text-align: center;
+            font-family: monospace;
+            font-size: 1rem;
+            color: var(--danger);
+            margin-top: 16px;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 6px;
+        }
+
+        .doc-stamp {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--danger);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: var(--danger);
+            text-align: center;
+            font-weight: 700;
+            transform: rotate(-15deg);
+        }
+
+        /* My Docs */
+        .my-doc-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .my-doc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .my-doc-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .my-doc-info {
+            flex: 1;
+        }
+
+        .my-doc-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .my-doc-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 300;
+        }
+
+        .toast {
+            background: var(--white);
+            padding: 14px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            min-width: 280px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--danger); }
+        .toast.warning i { color: var(--warning); }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--white);
+            border-radius: 12px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+        }
+
+        /* Page */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
-<div class="container">
-<h1>Patch Loader закрыт.</h1>
-<p>Больше он не будет распространяться.</p>
-<a href="https://t.me/codeverse_official" class="btn" target="_blank">Подробнее</a>
-</div>
-<script>
-const canvas = document.getElementById('stars');
-const ctx = canvas.getContext('2d');
-let w = canvas.width = window.innerWidth;
-let h = canvas.height = window.innerHeight;
-const stars = [];
-for (let i = 0; i < 350; i++) {
-stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5, s: Math.random() * 0.5 + 0.1 });
-}
-function animate() {
-ctx.clearRect(0, 0, w, h);
-ctx.fillStyle = '#ffffff';
-stars.forEach(star => {
-ctx.beginPath();
-ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-ctx.fill();
-star.y -= star.s;
-if (star.y < 0) {
-star.y = h;
-star.x = Math.random() * w;
-}
-});
-requestAnimationFrame(animate);
-}
-animate();
-window.addEventListener('resize', () => {
-w = canvas.width = window.innerWidth;
-h = canvas.height = window.innerHeight;
-});
-</script>
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-landmark"></i>
+                <span>ГородУслуги</span>
+            </div>
+            <nav class="nav-buttons">
+                <button class="nav-btn secondary" onclick="showPage('catalog')">
+                    <i class="fas fa-th-large"></i> Каталог
+                </button>
+                <button class="nav-btn secondary" onclick="showPage('myDocs')">
+                    <i class="fas fa-folder"></i> Мои документы
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="container">
+        <!-- Stats -->
+        <section class="stats">
+            <div class="stat-card blue">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Оформлено</div>
+            </div>
+            <div class="stat-card red">
+                <i class="fas fa-lock"></i>
+                <div class="stat-number" id="statBlocked">0</div>
+                <div class="stat-label">Заблокировано</div>
+            </div>
+            <div class="stat-card green">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-number">30</div>
+                <div class="stat-label">Доступно услуг</div>
+            </div>
+        </section>
+
+        <!-- Catalog Page -->
+        <div class="page active" id="pageCatalog">
+            <!-- Search -->
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Поиск документов..." onkeyup="handleSearch(event)">
+            </div>
+
+            <!-- Categories -->
+            <div class="categories">
+                <button class="cat-btn active" data-cat="all">Все</button>
+                <button class="cat-btn" data-cat="personal">Личные</button>
+                <button class="cat-btn" data-cat="medical">Медицина</button>
+                <button class="cat-btn" data-cat="transport">Транспорт</button>
+                <button class="cat-btn" data-cat="business">Бизнес</button>
+                <button class="cat-btn" data-cat="property">Имущество</button>
+                <button class="cat-btn" data-cat="license">Лицензии</button>
+                <button class="cat-btn" data-cat="education">Образование</button>
+                <button class="cat-btn" data-cat="other">Прочее</button>
+            </div>
+
+            <!-- Title -->
+            <h1 class="page-title"><i class="fas fa-file-signature"></i> Каталог услуг</h1>
+
+            <!-- Grid -->
+            <div class="docs-grid" id="docsGrid"></div>
+        </div>
+
+        <!-- My Documents Page -->
+        <div class="page" id="pageMyDocs">
+            <h1 class="page-title"><i class="fas fa-folder-open"></i> Мои документы</h1>
+            <div class="docs-grid" id="myDocsGrid"></div>
+        </div>
+    </main>
+
+    <!-- Apply Modal -->
+    <div class="modal-overlay" id="modalApply">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-signature"></i> <span id="applyTitle">Оформление</span></h2>
+                <button class="close-btn" onclick="closeModal('modalApply')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="applyBody"></div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div class="modal-overlay" id="modalView">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-id-card"></i> <span id="viewTitle">Документ</span></h2>
+                <button class="close-btn" onclick="closeModal('modalView')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="viewBody"></div>
+        </div>
+    </div>
+
+    <!-- Unlock Modal -->
+    <div class="modal-overlay" id="modalUnlock">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-unlock"></i> Разблокировка</h2>
+                <button class="close-btn" onclick="closeModal('modalUnlock')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="unlockBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DATABASE ============
+        const DOCUMENTS = [
+            { id: 'passport', name: 'Паспорт гражданина', icon: 'fa-id-card', cat: 'personal', desc: 'Основной документ, удостоверяющий личность', pass: '7654099_tt', fields: ['fullName', 'birthDate', 'birthPlace', 'gender', 'address'] },
+            { id: 'medcard', name: 'Медицинская карта', icon: 'fa-notes-medical', cat: 'medical', desc: 'Сведения о состоянии здоровья', pass: 'med_2024_card', fields: ['fullName', 'birthDate', 'bloodType', 'allergies'] },
+            { id: 'driverLicense', name: 'Водительские права', icon: 'fa-car', cat: 'transport', desc: 'Права на управление ТС всех категорий', pass: 'drive_777_go', fields: ['fullName', 'birthDate', 'categories', 'experience'] },
+            { id: 'ipCert', name: 'Свидетельство ИП', icon: 'fa-store', cat: 'business', desc: 'Регистрация индивидуального предпринимателя', pass: 'ip_biz_2024', fields: ['fullName', 'inn', 'businessType', 'address'] },
+            { id: 'oooCert', name: 'Свидетельство ООО', icon: 'fa-building', cat: 'business', desc: 'Регистрация ООО', pass: 'ooo_corp_55', fields: ['companyName', 'director', 'inn', 'address'] },
+            { id: 'snils', name: 'СНИЛС', icon: 'fa-id-badge', cat: 'personal', desc: 'Страховой номер лицевого счёта', pass: 'snils_123_s', fields: ['fullName', 'birthDate', 'gender'] },
+            { id: 'inn', name: 'ИНН', icon: 'fa-file-invoice-dollar', cat: 'personal', desc: 'Идентификационный номер налогоплательщика', pass: 'inn_tax_456', fields: ['fullName', 'birthDate', 'address'] },
+            { id: 'zagran', name: 'Загранпаспорт', icon: 'fa-passport', cat: 'personal', desc: 'Документ для выезда за рубеж', pass: 'zagran_789', fields: ['fullName', 'fullNameEn', 'birthDate', 'gender'] },
+            { id: 'oms', name: 'Полис ОМС', icon: 'fa-hospital', cat: 'medical', desc: 'Обязательное медицинское страхование', pass: 'oms_heal_32', fields: ['fullName', 'birthDate', 'insuranceCompany'] },
+            { id: 'military', name: 'Военный билет', icon: 'fa-user-shield', cat: 'personal', desc: 'Документ воинского учёта', pass: 'army_654_id', fields: ['fullName', 'birthDate', 'rank', 'militaryUnit'] },
+            { id: 'birthCert', name: 'Свидетельство о рождении', icon: 'fa-baby', cat: 'personal', desc: 'Регистрация рождения', pass: 'birth_111_c', fields: ['childName', 'birthDate', 'fatherName', 'motherName'] },
+            { id: 'marriage', name: 'Свидетельство о браке', icon: 'fa-ring', cat: 'personal', desc: 'Регистрация брака', pass: 'marry_222_c', fields: ['spouse1', 'spouse2', 'marriageDate'] },
+            { id: 'property', name: 'Право собственности', icon: 'fa-home', cat: 'property', desc: 'Право на недвижимость', pass: 'prop_333_ow', fields: ['ownerName', 'propertyType', 'address', 'area'] },
+            { id: 'weapon', name: 'Разрешение на оружие', icon: 'fa-crosshairs', cat: 'license', desc: 'Хранение и ношение оружия', pass: 'gun_444_per', fields: ['fullName', 'weaponType', 'reason'] },
+            { id: 'security', name: 'Лицензия охранника', icon: 'fa-shield-alt', cat: 'license', desc: 'Удостоверение частного охранника', pass: 'guard_555_l', fields: ['fullName', 'birthDate', 'category'] },
+            { id: 'taxi', name: 'Лицензия таксиста', icon: 'fa-taxi', cat: 'transport', desc: 'Разрешение на деятельность такси', pass: 'taxi_666_li', fields: ['fullName', 'carModel', 'carNumber'] },
+            { id: 'pilot', name: 'Лицензия пилота', icon: 'fa-plane', cat: 'transport', desc: 'Свидетельство пилота', pass: 'pilot_777_f', fields: ['fullName', 'category', 'flightHours'] },
+            { id: 'diploma', name: 'Диплом об образовании', icon: 'fa-graduation-cap', cat: 'education', desc: 'Высшее/среднее образование', pass: 'edu_888_dip', fields: ['fullName', 'institution', 'specialty', 'graduationYear'] },
+            { id: 'workbook', name: 'Трудовая книжка', icon: 'fa-book', cat: 'personal', desc: 'Сведения о трудовой деятельности', pass: 'work_999_bo', fields: ['fullName', 'birthDate', 'profession'] },
+            { id: 'nocrime', name: 'Справка о несудимости', icon: 'fa-user-check', cat: 'other', desc: 'Отсутствие судимости', pass: 'clear_000_n', fields: ['fullName', 'birthDate', 'purpose'] },
+            { id: 'build', name: 'Разрешение на строительство', icon: 'fa-hard-hat', cat: 'property', desc: 'Строительство объекта', pass: 'build_aaa_p', fields: ['ownerName', 'objectType', 'address', 'area'] },
+            { id: 'doctor', name: 'Лицензия врача', icon: 'fa-user-md', cat: 'medical', desc: 'Сертификат медработника', pass: 'doc_bbb_med', fields: ['fullName', 'specialty', 'institution'] },
+            { id: 'lawyer', name: 'Лицензия адвоката', icon: 'fa-balance-scale', cat: 'license', desc: 'Удостоверение адвоката', pass: 'law_ccc_adv', fields: ['fullName', 'barAssociation', 'regNumber'] },
+            { id: 'patent', name: 'Патент на изобретение', icon: 'fa-lightbulb', cat: 'business', desc: 'Право на изобретение', pass: 'pat_ddd_inv', fields: ['inventorName', 'inventionName', 'description'] },
+            { id: 'alcohol', name: 'Лицензия на алкоголь', icon: 'fa-wine-bottle', cat: 'business', desc: 'Продажа алкогольной продукции', pass: 'alco_eee_li', fields: ['companyName', 'inn', 'address'] },
+            { id: 'trade', name: 'Разрешение на торговлю', icon: 'fa-shopping-cart', cat: 'business', desc: 'Торговая деятельность', pass: 'trade_fff_s', fields: ['companyName', 'tradeType', 'address'] },
+            { id: 'quality', name: 'Сертификат качества', icon: 'fa-certificate', cat: 'business', desc: 'Соответствие продукции', pass: 'cert_ggg_qu', fields: ['productName', 'manufacturer', 'standards'] },
+            { id: 'hunting', name: 'Лицензия на охоту', icon: 'fa-paw', cat: 'license', desc: 'Охотничий билет', pass: 'hunt_hhh_wi', fields: ['fullName', 'region', 'huntingType'] },
+            { id: 'visa', name: 'Виза', icon: 'fa-stamp', cat: 'other', desc: 'Разрешение на въезд', pass: 'visa_iii_tr', fields: ['fullName', 'country', 'visaType', 'entryDate'] },
+            { id: 'vehicleReg', name: 'Регистрация авто', icon: 'fa-car-side', cat: 'transport', desc: 'Свидетельство о регистрации ТС', pass: 'auto_jjj_re', fields: ['ownerName', 'carBrand', 'carModel', 'plateNumber', 'color'] }
+        ];
+
+        const UNLOCK_PASS = '7654099_unlock';
+        const FEE = 5000;
+
+        const LABELS = {
+            fullName: 'ФИО', fullNameEn: 'ФИО (латиница)', birthDate: 'Дата рождения', birthPlace: 'Место рождения',
+            gender: 'Пол', address: 'Адрес', bloodType: 'Группа крови', allergies: 'Аллергии',
+            categories: 'Категории (A,B,C,D,E)', experience: 'Стаж', inn: 'ИНН', businessType: 'Вид деятельности',
+            companyName: 'Название компании', director: 'Директор', insuranceCompany: 'Страховая компания',
+            rank: 'Звание', militaryUnit: 'Часть', childName: 'ФИО ребёнка', fatherName: 'ФИО отца',
+            motherName: 'ФИО матери', spouse1: 'ФИО супруга', spouse2: 'ФИО супруги', marriageDate: 'Дата брака',
+            ownerName: 'Владелец', propertyType: 'Тип объекта', area: 'Площадь', weaponType: 'Тип оружия',
+            reason: 'Причина', category: 'Категория', carModel: 'Марка авто', carNumber: 'Гос. номер',
+            flightHours: 'Налёт часов', institution: 'Учреждение', specialty: 'Специальность',
+            graduationYear: 'Год выпуска', profession: 'Профессия', purpose: 'Цель', objectType: 'Тип объекта',
+            barAssociation: 'Адв. палата', regNumber: 'Рег. номер', inventorName: 'Изобретатель',
+            inventionName: 'Название', description: 'Описание', manufacturer: 'Производитель',
+            standards: 'Стандарты', tradeType: 'Вид торговли', productName: 'Продукция', region: 'Регион',
+            huntingType: 'Вид охоты', country: 'Страна', visaType: 'Тип визы', entryDate: 'Дата въезда',
+            carBrand: 'Марка', plateNumber: 'Номер', color: 'Цвет'
+        };
+
+        // ============ STATE ============
+        let state = { documents: [], attempts: {}, blocked: [] };
+
+        function loadState() {
+            const saved = localStorage.getItem('cityState');
+            if (saved) state = JSON.parse(saved);
+        }
+
+        function saveState() {
+            localStorage.setItem('cityState', JSON.stringify(state));
+        }
+
+        // ============ INIT ============
+        function init() {
+            loadState();
+            renderGrid();
+            updateStats();
+            setupCategories();
+        }
+
+        // ============ RENDER ============
+        function renderGrid(catFilter = 'all', search = '') {
+            const grid = document.getElementById('docsGrid');
+            grid.innerHTML = '';
+
+            let docs = DOCUMENTS;
+            if (catFilter !== 'all') docs = docs.filter(d => d.cat === catFilter);
+            if (search) {
+                const s = search.toLowerCase();
+                docs = docs.filter(d => d.name.toLowerCase().includes(s) || d.desc.toLowerCase().includes(s));
+            }
+
+            docs.forEach(doc => {
+                const isBlocked = state.blocked.includes(doc.id);
+                const isIssued = state.documents.find(d => d.docId === doc.id);
+
+                let status, btn;
+                if (isBlocked) {
+                    status = '<span class="doc-status blocked"><i class="fas fa-lock"></i> Заблокировано</span>';
+                    btn = `<button class="doc-btn unlock" onclick="openUnlock('${doc.id}')"><i class="fas fa-unlock"></i> Разблокировать</button>`;
+                } else if (isIssued) {
+                    status = '<span class="doc-status issued"><i class="fas fa-check"></i> Оформлен</span>';
+                    btn = `<button class="doc-btn view" onclick="viewDoc('${doc.id}')"><i class="fas fa-eye"></i> Просмотр</button>`;
+                } else {
+                    status = '<span class="doc-status available"><i class="fas fa-plus"></i> Доступно</span>';
+                    btn = `<button class="doc-btn apply" onclick="openApply('${doc.id}')"><i class="fas fa-pen"></i> Оформить</button>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = `doc-card ${isBlocked ? 'blocked' : ''}`;
+                card.dataset.cat = doc.cat;
+                card.innerHTML = `
+                    <div class="doc-header">
+                        <div class="doc-icon"><i class="fas ${doc.icon}"></i></div>
+                        <div class="doc-info">
+                            <h3>${doc.name}</h3>
+                            <p>${doc.desc}</p>
+                        </div>
+                    </div>
+                    <div class="doc-body">
+                        ${status}
+                        ${btn}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderMyDocs() {
+            const grid = document.getElementById('myDocsGrid');
+            grid.innerHTML = '';
+
+            if (state.documents.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Нет оформленных документов</h3>
+                        <p>Перейдите в каталог для оформления</p>
+                    </div>
+                `;
+                return;
+            }
+
+            state.documents.forEach(ud => {
+                const doc = DOCUMENTS.find(d => d.id === ud.docId);
+                if (!doc) return;
+
+                const card = document.createElement('div');
+                card.className = 'my-doc-card';
+                card.onclick = () => viewDoc(ud.docId);
+                card.innerHTML = `
+                    <div class="my-doc-icon"><i class="fas ${doc.icon}"></i></div>
+                    <div class="my-doc-info">
+                        <h3>${doc.name}</h3>
+                        <p>№ ${ud.number} • Выдан: ${ud.issueDate}</p>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--gray);"></i>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('statTotal').textContent = state.documents.length;
+            document.getElementById('statBlocked').textContent = state.blocked.length;
+        }
+
+        // ============ MODALS ============
+        function openApply(docId) {
+            const doc = DOCUMENTS.find(d => d.id === docId);
+            if (!doc || state.blocked.includes(docId)) return;
+
+            document.getElementById('applyTitle').textContent = doc.name;
+            const attempts = state.attempts[docId] || 0;
+
+            let html = `
+                <div class="password-box">
+                    <h4><i class="fas fa-key"></i> Код доступа</h4>
+                    <p style="font-size: 0.9rem; color: #92400e;">Введите служебный код для оформления</p>
+                    <input type="text" id="passInput" placeholder="Введите код">
+                    ${attempts > 0 ? `<p class="attempts-warn"><i class="fas fa-exclamation-triangle"></i> Осталось попыток: ${3 - attempts}</p>` : ''}
+                </div>
+                <h4 style="margin-bottom: 16px;">Заполните данные</h4>
+            `;
+
+            doc.fields.forEach((f, i) => {
+                const isRow = i % 2 === 0;
+                const isLast = i === doc.fields.length - 1;
+                const isOdd = doc.fields.length % 2 === 1;
+
+                if (isRow) html += '<div class="form-row">';
+
+                if (f === 'gender') {
+                    html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>Мужской</option><option>Женский</option></select></div>`;
+                } else if (f === 'bloodType') {
+                    html += `<div class="form-group"><label>${LABELS[f]}</label><select id="f_${f}"><option>I (O)</option><option>II (A)</option><option>III (B)</option><option>IV (AB)</option></select></div>`;
+                } else {
+                    const type = f.toLowerCase().includes('date') ? 'date' : 'text';
+                    html += `<div class="form-group"><label>${LABELS[f] || f}</label><input type="${type}" id="f_${f}" placeholder="${LABELS[f] || f}"></div>`;
+                }
+
+                if (!isRow || (isLast && isOdd)) html += '</div>';
+            });
+
+            html += `<button class="submit-btn" onclick="submitApply('${docId}')"><i class="fas fa-paper-plane"></i> Оформить</button>`;
+
+            document.getElementById('applyBody').innerHTML = html;
+            document.getElementById('modalApply').classList.add('active');
+        }
+
+        function submitApply(docId) {
+            const doc = DOCUMENTS.find(d => d.id === docId);
+            const passInput = document.getElementById('passInput');
+            const enteredPass = passInput.value.trim();
+
+            console.log('Entered:', enteredPass);
+            console.log('Expected:', doc.pass);
+            console.log('Match:', enteredPass === doc.pass);
+
+            if (enteredPass !== doc.pass) {
+                state.attempts[docId] = (state.attempts[docId] || 0) + 1;
+
+                if (state.attempts[docId] >= 3) {
+                    state.blocked.push(docId);
+                    saveState();
+                    closeModal('modalApply');
+                    toast('Услуга заблокирована!', 'error');
+                    renderGrid();
+                    updateStats();
+                    return;
+                }
+
+                saveState();
+                toast(`Неверный код! Осталось: ${3 - state.attempts[docId]}`, 'error');
+                closeModal('modalApply');
+                openApply(docId);
+                return;
+            }
+
+            // Collect data
+            const data = {};
+            let ok = true;
+            doc.fields.forEach(f => {
+                const el = document.getElementById('f_' + f);
+                if (el) {
+                    data[f] = el.value;
+                    if (!el.value) ok = false;
+                }
+            });
+
+            if (!ok) {
+                toast('Заполните все поля', 'warning');
+                return;
+            }
+
+            const now = new Date();
+            const valid = new Date();
+            valid.setFullYear(valid.getFullYear() + 10);
+
+            state.documents = state.documents.filter(d => d.docId !== docId);
+            state.documents.push({
+                docId,
+                number: genNumber(),
+                data,
+                issueDate: now.toLocaleDateString('ru-RU'),
+                validUntil: valid.toLocaleDateString('ru-RU')
+            });
+
+            delete state.attempts[docId];
+            saveState();
+            closeModal('modalApply');
+            toast('Документ оформлен!', 'success');
+            renderGrid();
+            updateStats();
+        }
+
+        function viewDoc(docId) {
+            const ud = state.documents.find(d => d.docId === docId);
+            const doc = DOCUMENTS.find(d => d.id === docId);
+            if (!ud || !doc) return;
+
+            document.getElementById('viewTitle').textContent = doc.name;
+
+            let fields = '';
+            for (const [k, v] of Object.entries(ud.data)) {
+                if (v) fields += `<div class="doc-field"><div class="doc-field-label">${LABELS[k] || k}</div><div class="doc-field-value">${v}</div></div>`;
+            }
+
+            document.getElementById('viewBody').innerHTML = `
+                <div class="document-view">
+                    <div class="doc-emblem"><i class="fas ${doc.icon}"></i></div>
+                    <div class="doc-title-view">${doc.name}</div>
+                    ${fields}
+                    <div class="doc-field"><div class="doc-field-label">Дата выдачи</div><div class="doc-field-value">${ud.issueDate}</div></div>
+                    <div class="doc-field"><div class="doc-field-label">Действителен до</div><div class="doc-field-value">${ud.validUntil}</div></div>
+                    <div class="doc-number-view"><i class="fas fa-barcode"></i> № ${ud.number}</div>
+                    <div class="doc-stamp">ГОРОД<br>УСЛУГИ<br>✓</div>
+                </div>
+                <button class="submit-btn danger" style="margin-top: 16px;" onclick="deleteDoc('${docId}')">
+                    <i class="fas fa-trash"></i> Удалить
+                </button>
+            `;
+            document.getElementById('modalView').classList.add('active');
+        }
+
+        function deleteDoc(docId) {
+            if (!confirm('Удалить документ?')) return;
+            state.documents = state.documents.filter(d => d.docId !== docId);
+            saveState();
+            closeModal('modalView');
+            toast('Документ удалён', 'success');
+            renderGrid();
+            renderMyDocs();
+            updateStats();
+        }
+
+        function openUnlock(docId) {
+            const doc = DOCUMENTS.find(d => d.id === docId);
+            if (!doc) return;
+
+            document.getElementById('unlockBody').innerHTML = `
+                <div class="unlock-box">
+                    <h4><i class="fas fa-exclamation-circle"></i> Услуга заблокирована</h4>
+                    <p>Для разблокировки "${doc.name}" оплатите госпошлину</p>
+                </div>
+                <div class="form-group">
+                    <label>Госпошлина</label>
+                    <div class="fee-amount">${FEE.toLocaleString()} ₽</div>
+                </div>
+                <div class="form-group">
+                    <label>Способ оплаты</label>
+                    <select id="payMethod">
+                        <option value="">Выберите...</option>
+                        <option value="card">Карта</option>
+                        <option value="qr">QR-код</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Код разблокировки</label>
+                    <input type="text" id="unlockPass" placeholder="Введите код">
+                </div>
+                <button class="submit-btn danger" onclick="submitUnlock('${docId}')">
+                    <i class="fas fa-unlock"></i> Разблокировать
+                </button>
+            `;
+            document.getElementById('modalUnlock').classList.add('active');
+        }
+
+        function submitUnlock(docId) {
+            const method = document.getElementById('payMethod').value;
+            const pass = document.getElementById('unlockPass').value.trim();
+
+            if (!method) {
+                toast('Выберите способ оплаты', 'warning');
+                return;
+            }
+
+            if (pass !== UNLOCK_PASS) {
+                toast('Неверный код разблокировки', 'error');
+                return;
+            }
+
+            state.blocked = state.blocked.filter(id => id !== docId);
+            delete state.attempts[docId];
+            saveState();
+
+            closeModal('modalUnlock');
+            toast('Услуга разблокирована!', 'success');
+            renderGrid();
+            updateStats();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // ============ UTILS ============
+        function genNumber() {
+            return `${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+
+        function toast(msg, type = 'success') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-circle' };
+            t.innerHTML = `<i class="fas ${icons[type]}"></i><span>${msg}</span>`;
+            c.appendChild(t);
+            setTimeout(() => { t.remove(); }, 3000);
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            if (page === 'catalog') {
+                document.getElementById('pageCatalog').classList.add('active');
+                renderGrid();
+            } else {
+                document.getElementById('pageMyDocs').classList.add('active');
+                renderMyDocs();
+            }
+        }
+
+        function setupCategories() {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderGrid(btn.dataset.cat, document.getElementById('searchInput').value);
+                };
+            });
+        }
+
+        function handleSearch(e) {
+            const cat = document.querySelector('.cat-btn.active').dataset.cat;
+            renderGrid(cat, e.target.value);
+        }
+
+        // Close on overlay
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.onclick = e => { if (e.target === m) m.classList.remove('active'); };
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-</html>
+  </html>
